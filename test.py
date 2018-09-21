@@ -26,10 +26,8 @@ class Singleton(Borg):  #Inherits from the borg class
         return str(self._shared_state)
 
 x = Singleton(HTTP = "hyper text transfer protocol")
-print x
 
 y = Singleton(SNMP = 'simple network management protocol')
-print y
 
 z = Singleton(DHCP = 'dynamic host configuration protoclo')
-print z
+print x, y, z
