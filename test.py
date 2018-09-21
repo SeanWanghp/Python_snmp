@@ -30,4 +30,6 @@ x = Singleton(HTTP = "hyper text transfer protocol")
 y = Singleton(SNMP = 'simple network management protocol')
 
 z = Singleton(DHCP = 'dynamic host configuration protoclo')
-print x, y, z
+print x
+print y
+print z
