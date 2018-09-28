@@ -73,6 +73,9 @@ def _run_walk(target_IP, target_port):
                         snmp_content += [val.prettyPrint()]
 
                 for snmp_con in snmp_content:
+                    '''
+                    snmp content with regular expression and showing up what you needed
+                    '''
                     card_rule = sre.compile('7-2\s+')
                     # print "card_rule type:", type(card_rule)
                     card_type = card_rule.search(snmp_con)
