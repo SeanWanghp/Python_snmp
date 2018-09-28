@@ -64,15 +64,28 @@ def _run_walk(target_IP, target_port):
                 )
             else:
                 # Print values
+                snmp_content = []
                 for varBindTableRow in varBindTable:
                     for name, val in varBindTableRow:
                         counter += 1
                         # target_file.write("(%s)\t start_OID: %s\tvalue =\t%s\n" % (counter, name.prettyPrint(), val.prettyPrint()))
-                        print ("(%s)\t start_OID: %s\tvalue =\t%s" % (counter, name.prettyPrint(), val.prettyPrint()))
+                        # print ("(%s)\t start_OID: %s\tvalue =\t%s" % (counter, name.prettyPrint(), val.prettyPrint()))
+                        snmp_content += [val.prettyPrint()]
 
-                # Finish the operation
+                for snmp_con in snmp_content:
+                    card_rule = sre.compile('7-2\s+')
+                    print "card_rule type:", type(card_rule)
+                    card_type = card_rule.search(snmp_con)
+                    if card_type:
+                        print "card_type: %s"%card_type.group()
+                        print "card line: '\033[0;31m%s\033[0m'"%snmp_con
+                    else:
+                        print "snmp_content: %s"%snmp_con
+
+                    # Finish the operation
                 # target_file.close()
                 print('Writing to %s successful. %d lines have been written' % (target_file_name, counter))
+
                 # sys.exit(0)
         return None
 
