@@ -46,6 +46,9 @@ filename=''
 connected=None
 
 class lib_card_E3(object):
+    '''
+    telnet to EQPT
+    '''
     def __init__(self):
         self.enter = "\r"
         # self.prompt = "DLV>"
@@ -74,7 +77,9 @@ class lib_card_E3(object):
         print "card_numbers:", card_numbers
         return card_numbers
 
-
+'''
+tkinter part for GUI
+'''
 def author():
     showinfo('作者信息', '本软件由Sean Wang研究出来的')
 
@@ -177,6 +182,9 @@ def onFind():
         textPad.focus()
 
 class Example():
+    '''
+    telnet to differetn EQPTs
+    '''
 
     def __init__(self):
         self.promptList = [rePrompt, reTL1Prompt, reShellPrompt, reLinuxPrompt, reLoginPrompt, rePasswordPrompt,
@@ -240,7 +248,7 @@ class Example():
             else:
                 ip = Lb1.get(Lb1.curselection())
             self.session(ip)
-            steps = '''e3support
+            steps = '''e3admin
                                 admin
                                 set se pa di ti di'''
             for step in steps.split('\n'):
@@ -296,7 +304,7 @@ class Example():
         if ip:
             self.session(ip)
             print "-------------log into E3 !!!!--------------------"
-            steps='''e3support
+            steps='''e3admin
                                 admin
                                 set se pa di ti di
                                 debug
@@ -323,7 +331,7 @@ class Example():
         if ip:
             self.session(ip)
             print "-------------log into e7 !!!!--------------------"
-            steps='''e7support
+            steps='''e7admin
                                 admin
                                 set se pa di ti di
                                 show card
@@ -375,7 +383,7 @@ class Example():
                 ip = Lb1.get(Lb1.curselection())
             self.session(ip)
             print "-------------log into e7_TPS !!!!--------------------"
-            steps='''e7support
+            steps='''e7admin
                                 admin
                                 set se pa di ti di
                                 set session event-notif disabled
@@ -402,11 +410,11 @@ class Example():
         upgrade_version = content_ver.get().encode('gbk')
         if upgrade_version == "":
             upgrade_version = self.version()
-            steps = '''e3support
+            steps = '''e3admin
                                 admin
                                 commit system version %s''' % upgrade_version
         else:
-            steps = '''e3support
+            steps = '''e3admin
                                 admin
                                 set se pa di ti di
                                 set session event-notif disabled
