@@ -13,6 +13,9 @@ import random
 
 
 def _run_walk(target_IP, target_port):
+		'''
+		snmp code from python source code
+		'''
         # Turn on debugging
         # debug.setLogger(debug.Debug('msgproc', 'secmod'))
         # Check for already existing file
@@ -106,6 +109,9 @@ if __name__ == '__main__':
     target_port = '30161'
 
     for i in range(1, 2):
+		'''
+		multiprocesssing for running on more EQPTs
+		'''
         msg = ['10.245.46.208', '10.245.46.208', '10.245.46.208', '10.245.46.215', '10.245.46.216']
         tel_port = ['161', '161', '161', '161', '161']
         wait_time = 1

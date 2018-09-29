@@ -73,7 +73,7 @@ HELLO ="""
 Send_XML = """
 <rpc message-id="102" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" message-id="">
   <get>
-    <filter xmlns:t="http://www.calix.com/ns/exa/base" type="xpath"
+    <filter xmlns:t="http://www.casean.com/ns/exa/base" type="xpath"
             select="/status/system/discovered-onts"/>
   </get>
 </rpc>
@@ -85,6 +85,10 @@ CLOSE = """
 </rpc>
 ]]>]]>"""
 
+
+'''
+netconf send and print, still in process, need debugging!!!!!!!!
+'''
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((ROUTER_IP, PORT))
 
