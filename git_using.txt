@@ -1,0 +1,9 @@
+######shortcut for ride.py:
+c:\python27\pythonw.exe -c "from robotide import main;main()"
+
+
+git clone https://github.com/SeanWanghp/Python_snmp.git maojun
+
+git add test.py
+git commit -am '1'
+git push
