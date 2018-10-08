@@ -11,7 +11,7 @@ from requests.auth import HTTPBasicAuth
 '''
 login wiki page and capture detail content
 '''
-wiki_page = "http://wiki.calix.local/display/~sewang/VB+script+for+simulation+ONT+with+services"
+wiki_page = "http://wiki.xxxx.local/display/~sewang/VB+script+for+simulation+ONT+with+services"
 
 
 def SaveFile(content, filename):
