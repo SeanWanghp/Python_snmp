@@ -1,6 +1,22 @@
 #-*- encoding: gb2312 -*-
 import threading, time
+'''
+在threading模块中，定义两种类型的锁：threading.Lock和threading.RLock。它们之间有一点细微的区别，通过比较下面两段代码来说明：
 
+import threading
+lock = threading.Lock() #Lock对象
+lock.acquire()
+lock.acquire()  #产生了死锁
+lock.release()
+lock.release()
+import threading
+rLock = threading.RLock()  #RLock对象
+rLock.acquire()
+rLock.acquire() #在同一线程内，程序不会堵塞
+rLock.release()
+rLock.release()
+
+'''
 
 class Test(threading.Thread):
     def __init__(self, num):
