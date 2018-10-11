@@ -1,0 +1,4 @@
+tcpdump -i eth0      *******can show packet with this port
+locate dhcpd.conf    *******can find file faster
+rpm -qa dhcp         *******find dhcp file
+lsb_release -a       *******show linux version

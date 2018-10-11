@@ -1,0 +1,16 @@
+find / -name snmp.conf
+
+snmptranslate -Dinit_mib .1.3 2>&1 | grep MIBDIR
+
+snmpwalk -v2c -cpublic 10.245.46.205 1.3.6.1.4.1.6321.1.2.2.2.1.9.1.5.1.2.99
+
+snmpwalk -v2c -cpublic 10.245.47.10 1.3.6
+
+
+/usr/share/snmp/mibs
+
+snmp.conf:     mibs +ALL
+
+snmptranslate -Dinit_mib .1.3 2>&1 |grep MIBDIR
+
+./snmp.sh    run this command with the shell script

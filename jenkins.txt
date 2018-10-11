@@ -1,6 +1,10 @@
 download jenkins and install
 C:\Program Files (x86)\Jenkins\secrets
 
+open page on windows:
+http://localhost:8080/job/sean/configure
+admin/admin
+
 »±…ŸJAVA WEB START:
 https://blog.csdn.net/cindy3124/article/details/60763524
 

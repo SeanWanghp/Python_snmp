@@ -1,0 +1,13 @@
+ scp jxiang@172.23.43.45:~jxiang/ntid_tool/* .
+ scp sewang@172.23.43.45:~jxiang/ntid_tool/* .
+
+./ntid32 -p 10000 -i dummy0 &
+
+tcpdump -i eth1 udp_port 10000
+wireshark
+
+/sbin/modprobe dummy numdummies=1
+
+ifconfig dummy0
+ifconfig dummy0 up
+ifconfig dummy0 promisc

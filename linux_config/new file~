@@ -1,0 +1,143 @@
+[root@localhost ~]# tail -f /var/log/messages
+
+[root@localhost etc]# vi /etc/dhcpd.conf
+dhcpd6s.conf
+
+net.ipv4.ip_forward = 1
+
+net.ipv6.conf.all.forwarding = 1
+
+
+[root@localhost lib]# cd /var/lib/dhcpd
+
+[root@localhost etc]# service dhcpd stop
+[root@localhost etc]# service dhcpd start
+							service network restart
+
+service dhcp6s status
+service dhcp6s start
+
+root password:rootgod
+
+option rfc3442-classless-static-routes code 121 = array of integer 8;
+option ms-classless-static-routes code 249 = array of integer 8;
+
+option rfc3442-classless-static-routes 24, 10,20,253, 10,20,253,1;
+option ms-classless-static-routes 24, 10,20,253, 10,20,253,1;
+
+option rfc3442-classless-static-routes 0, 192,168,137,121;
+option rfc3442-classless-static-routes 24, 10,10,121, 192,168,137,121;
+
+
+
+
+[root@localhost dhcpd]# pwd
+/var/lib/dhcpd
+[root@localhost dhcpd]# ls
+dhcpd.leases  dhcpd.leases~
+
+[root@localhost dhcpd]# rm -f dhcpd.leases
+
+[root@localhost ~]# man 5 dhcpd.conf
+
+/option    
+
+yum install vnc-server
+vncserver
+vncpasswd
+
+yum install ftp
+
+yum groupinstall chinese-support     install chinese 
+
+yum clean all
+kill 2343
+
+ifdown eth0
+ifup eth1
+
+tcpdump -i eth0
+tcpdump -i eth1
+
+ip rule show
+ip route show
+
+man route
+man ip route
+
+route add -net 192.168.137.0/24  dev eth0
+
+cat /etc/sysconfig/dhcpd 
+DHCPDARGS=eth0
+cat /etc/sysconfig/network-scripts/ifcfg-eth1
+
+ip route add default via 10.20.253.26 dev eth0 src 10.20.253.25 table 100
+ip rule add from 10.20.253.26 table 100
+
+
+rpm -qa | grep vnc
+
+zip -r 1.zip dhcpd.leases
+
+
+DNS
+hostname:localhost.localdomain localhost.localdomain
+primary DNS:192.168.33.10
+secondary DNS:172.23.41.10
+
+DNS searchpath:calix.local
+
+
+/etc/rc.local     -->add start program
+
+route add default gw 10.245.46.1 dev eth1   -->add default gw
+
+vsftpd          -->install ftp server
+service vsftpd start/stop       -->start/stop ftp server
+
+user add sean
+password sean
+
+date -s 07/19/2013     -->change date
+date -s 16:23:00       -->change time
+
+chkconfig --list|grep dhcp      -->check dhcp start or not
+chkconfig dhcpd on             -->let dhcpd start when boot up
+
+
+[root@localhost /]# snmpwalk -v2c -cpublic 10.245.46.205 ifdes
+IF-MIB::ifDescr.101 = STRING: 1/1/g1
+
+snmpwalk -v2c -cpublic 10.245.46.205 1.3.6.1.4.1.6321.1.2.2.2.1.9.1.5.1.2.99
+
+[root@localhost ~]# locate mib | grep snmp    ---->check SNMP MIB location
+
+
+/usr/share/snmp/mibs    snmp mib path
+ find / -name snmp.conf
+FTP to get file from windows
+
+
+/var/lib/dhcpd/dhcpd.leases
+/var/db/dhcpd.leases
+
+/etc/dhcpd6s.conf
+
+
+
+cd /var/log
+cat messages     ///to check system error log to debug
+
+/etc/sysconfig/network-scripts/ifcfg-eth0.txt  //config eth0
+
+
+yum install wireshark
+yum install wireshark-gome.i386
+
+
+CISCO: sdm perfer dual-ipv4-and-ipv6 default
+
+
+
+tar zxvf pycharm-community-2017.3.2.tar.gz
+./pycharm.sh

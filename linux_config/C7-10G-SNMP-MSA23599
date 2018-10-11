@@ -1,0 +1,7 @@
+[root@localhost Desktop]# snmpget -v2c -c public 10.245.42.10:5000 IF-MIB::ifSpeed.352583680
+IF-MIB::ifSpeed.352583680 = Gauge32: 4294967295
+[root@localhost Desktop]# snmpget -v2c -c public 10.245.42.10:5000 IF-MIB::ifHighSpeed.352583680
+IF-MIB::ifHighSpeed.352583680 = Gauge32: 10000
+[root@localhost Desktop]# 
+[root@localhost Desktop]# 
+[root@localhost Desktop]# 

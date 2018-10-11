@@ -1,0 +1,67 @@
+Simple DHCPv6 server configuration
+On server
+1. install DHCPv6 rpm package.
+   # rpm -ivh dhcpv6-1.2.0-2.fc11.x86_64.rpm
+2. Enable the IPv6 networking on the server. 
+   # vi /etc/sysconfig/network
+     NETWORKING_IPV6=yes
+3. The Interface for DHCPv6 server need to be specified IPV6 address.
+   # vi /etc/sysconfig/network-script/ifcfg-eth0
+     IPV6INIT=yes
+     IPV6ADDR=3ffe:501:ffff:10::1
+   Restart the network
+   # service network restart
+   # ifconfig eth0 | grep inet6
+     inet6 addr: 3ffe:501:ffff:1::1/64 Scope:Global
+     inet6 addr: fe80::223:aeff:fe9d:846f/64 Scope:Link
+
+4. Enable forwarding of IPv6 packets:
+   # sysctl -w net.ipv6.conf.all.forwarding=1
+5. Specify the interface for DHCPv6 server.
+   # vi /etc/sysconfig/dhcp6s
+     DHCP6SIF=eth0
+     DHCP6ARGS=
+6. Edit the maim DHCPv6 server configuration file as following:
+   # vi /etc/dhcp6s.conf
+     interface eth0 {
+         renew-time 1000;
+         rebind-time 2400;
+         prefer-life-time 2000;
+         valid-life-time 3000;
+         link AAA {
+        range 3ffe:501:ffff:1::2 to 3ffe:501:ffff:1::10/64;
+         };
+      };
+7. Disable the firewall.
+   # ip6tables -F
+8. Finally, we start DHCPv6 server.
+   # dhcp6s -v -f eth0
+   The output of the command is verbose debugging output.
+   At the bottom of the output, we get that the DHCPv6 server is OK.
+   "Dec/24/2009 16:44:08 interface definition for eth0 is ok"
+
+On client
+1. Instal DHCPv6 client rpm package.
+   rpm -ivh dhcpv6-client-1.2.0-2.fc11.x86_64.rpm
+2. Enable the IPv6 networking on the client.
+   # vi /etc/sysconfig/network
+     NETWORKING_IPV6=yes
+3. Configure a interface as DHCPv6 client.
+   # vi /etc/sysconfig/network-scripts/ifcfg-eth0
+     IPV6INIT=yes
+     DHCPV6C=yes
+4. Edit the main DHCPv6 client configuration file as following:
+   # vi /etc/dhcp6c.conf
+     interface eth1{
+     };
+5. Disalbe the firewall on the client
+   # ip6tables -F
+6. Check the network before networking restart.
+   # ifconfig eth0 | grep inet6
+     inet6 addr: fe80::223:aeff:fe9d:8294/64 Scope:Link
+7. Restart networking on the client.
+   # service network restart
+8. The client get the IPv6 address from DHCPv6 server.
+   # ifconfig eth0 | grep inet6
+     inet6 addr: 3ffe:501:ffff:1::2/64 Scope:Global
+     inet6 addr: fe80::223:aeff:fe9d:8294/64 Scope:Link
