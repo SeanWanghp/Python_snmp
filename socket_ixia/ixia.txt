@@ -1,0 +1,29 @@
+
+ixLogin sean
+
+set chassisID 1
+set cardID 1
+set portID 7
+#set port2 9
+
+set portList [list [list 1 1 7] [list 1 1 9]]
+
+
+ixClearOwnership $portList
+
+ixTakeOwnership $portList
+
+
+####################Enable an DHCP client##################################
+interfaceTable select $chassisID $cardID $portID
+
+interfaceEntry config -enable true
+interfaceEntry config -description 	{wang1}
+interfaceEntry config -macAddress 	{00 00 96 C2 1B EE}
+interfaceEntry config -enableDhcp	true 
+
+interfaceTable addInterface
+interfaceTable write
+
+
+##########################################################################
