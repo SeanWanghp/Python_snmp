@@ -1,0 +1,22 @@
+Fabric install on my PC:
+
+pip install fabric
+pip uninstall fabric
+
+
+四、安装pygame：
+1、这是我自己实测过的方法，直接在命令行里输入pip install pygame，即可成功下载，可能它会自动检测电脑Python的版本而下载对应的pygame版本，各位可以试一下！
+2、网上有另外一种方法，我没试过，链接如下：http://zhidao.baidu.com/link?url=5RxJX5lAoW82MmilvWvO1BVRprTmAhffg0H0WHOJhx-4waxFHnnL0ZmkstZYBYNZQ8UVz5FNZD569dITBM2FxK
+
+可以通过pip包管理器来安装Python包，但是pygame包包含C语言代码，需要进行编译。最简单的方式是，在网上下载已经编译好的安装包。具体步骤如下：
+
+    到http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame下载pygame的安装包，注意选择合适的版本，比如适合Python3.4的版本文件名中包含cp34，适合64位操作系统的版本，文件名中包含amd64；
+
+    选择开始>运行，输入cmd打开命令提示符，在命令提示符中输入：
+
+    pip install 下载pygame安装包的完整路径
+
+    打开Python，输入import pygame，如果没有报错则说明安装成功。
+
+比如我下载的是Python2.7.9,那么对应应下载pygit2?0.21.3?cp27?none?win_amd64.whl
+以上就是全部了，打开你的Python2.7 IDLE，输入import pygame，如果出现图7，即不报错，这说明你的pygame模块安装大功告成了，哈哈！！

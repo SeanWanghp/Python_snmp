@@ -1,4 +1,7 @@
 yum install sysstat
+yum list installed
+
+yum install -y wireshark
 
 
 [root@localhost ~]# uname -a
