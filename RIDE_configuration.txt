@@ -1,0 +1,13 @@
+C:\Python27\Lib\site-packages\robotide\__init__.py 用来启动RIDE
+C:\Python27\Lib\site-packages\robotide\application.py 用来启动FRAME
+C:\Python27\Lib\site-packages\robotide\mainframe.py 是GUI主要部件功能
+C:\Python27\Lib\site-packages\robotide\ui\tree.py 左边框文件目录结构
+
+
+#####################PUBLIC LIB path as following
+C:\Python27\Lib\site-packages\robotide\lib\robot\libraries\String.py  #CLI function path
+
+C:\Python27\Lib\site-packages\SeleniumLibrary\keywords\browsermanagement.py   #GUI function path
+
+C:\Python27\Lib\site-packages\robot\api\deco.py		#keywords\browsermanagement method
+

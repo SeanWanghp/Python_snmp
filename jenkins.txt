@@ -1,0 +1,13 @@
+download jenkins and install
+C:\Program Files (x86)\Jenkins\secrets
+
+»±…ŸJAVA WEB START:
+https://blog.csdn.net/cindy3124/article/details/60763524
+
+run locad python script:
+https://blog.csdn.net/huilaojia123/article/details/54096095
+
+
+plugin install with selenium:
+https://blog.csdn.net/Huilaojia123/article/details/53993167
+
