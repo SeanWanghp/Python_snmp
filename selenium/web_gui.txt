@@ -1,0 +1,5 @@
+£®1£©WEB“≥√Ê≤‚ ‘£∫
+https://pypi.python.org/pypi/robotframework
+https://pypi.python.org/pypi/selenium#downloads                   °°  #“¿¿µ∞¸
+https://pypi.python.org/pypi/robotframework-seleniumlibrary        #“¿¿µ∞¸
+https://pypi.python.org/pypi/robotframework-selenium2library

@@ -1,5 +1,7 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# coding=utf-8                                                                  #this must be in first line
+#C:\Python27\Doc python
+__author__='Maojun'
+
 import os
 from fabric.api import *
 from fabric.context_managers import *
@@ -12,6 +14,41 @@ from fabric.colors import *
 
 """
 Created on 04/08/2018
+
+fabfile全局属性设定
+env对象的作用是定义fabfile的全局设定，各属性说明如下：
+
+属性	含义
+env.host	定义目标主机,以python的列表表示，如env.host=['xx.xx.xx.xx','xx.xx.xx.xx']
+env.exclude_hosts	排除指定主机，以python的列表表示
+env.port	定义目标主机端口，默认为22
+env.user	定义用户名
+env.password	定义密码
+env.passwords	与password功能一样，区别在于不同主机配置不同密码的应用情景,配置此项的时候需要配置用户、主机、端口等信息，
+				如：env.passwords = {'root@xx.xx.xx.xx:22': '123', 'root@xx.xx.xx.xx':'234'}
+env.getway	定义网关
+env.deploy_release_dir	自定义全局变量
+env.roledefs	定义角色分组
+
+常用的API
+Fabric支持常用的方法及说明如下：
+
+方法	说明
+local	执行本地命令，如:local('hostname')
+lcd	切换本地目录,lcd('/root')
+cd	切换远程目录,cd('cd')
+run	执行远程命令，如：run('hostname')
+sudo	sudo执行远程命令，如：sudo('echo “123456″	passwd --stdin root')
+put	上传本地文件到远程主机,如：put(src,des)
+get	从远程主机下载文件到本地，如：get(des,src)
+prompt	获取用户输入信息，如：prompt（‘please enter a new password:’）
+confirm	获取提示信息确认，如：confirm('failed.Continue[Y/n]?')
+reboot	重启远程主机，reboot()
+@task	函数修饰符，标识的函数为fab可调用的
+@runs_once	函数修饰符，表示的函数只会执行一次
+
+作者：爱吃土豆的程序猿
+链接：https://www.jianshu.com/p/14c89ae13364
 
 """
 

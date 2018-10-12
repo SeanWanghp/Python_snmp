@@ -1,0 +1,8 @@
+（2）接口测试：
+在线：pip install requests
+离线：
+https://pypi.python.org/pypi/certifi                                                 #依赖包
+https://pypi.python.org/pypi/urllib3#downloads           　　　　     #依赖包
+https://pypi.python.org/pypi/idna#downloads                                 #依赖包
+https://pypi.python.org/pypi/chardet/#downloads                          #依赖包
+https://pypi.python.org/pypi/requests#downloads

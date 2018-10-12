@@ -1,1 +1,28 @@
 fab -f fab_dav_q.py dotask	#only can run with DOS command
+
+Fabric的官网是www.fabfile.org
+
+
+
+任务可以带参数，比如我们将hello函数改为：
+
+Python
+
+def hello(name, value):
+    print "Hello Fabric! %s=%s" % (name,value)
+1
+2
+def hello(name, value):
+    print "Hello Fabric! %s=%s" % (name,value)
+此时执行hello任务时，就要传入参数值：
+
+
+$ fab hello:name=Year,value=2016
+1
+$ fab hello:name=Year,value=2016
+Fabric的脚本建议写在”fabfile.py”文件中，如果你想换文件名，那就要在”fab”命令中用”-f”指定。比如我们将脚本放在”script.py”中，就要执行：
+
+
+$ fab -f script.py hello
+1
+$ fab -f script.py hello
