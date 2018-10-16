@@ -3,7 +3,13 @@ c:\python27\pythonw.exe -c "from robotide import main;main()"
 
 
 git clone https://github.com/SeanWanghp/Python_snmp.git maojun
+git clone https://github.com/SeanWanghp/python_GUI.git gui
 
 git add test.py
 git commit -am '1'
 git push
+
+
+C:\Python27\Doc\AXOS\milan>python smx_unittest.py   生成HTML
+
+C:\Python27\Doc\basic_lib\fabric_basic>fab -f fab_dav_q.py dotask	FABRIC执行多服务器操作
