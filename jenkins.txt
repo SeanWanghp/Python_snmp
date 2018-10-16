@@ -15,3 +15,15 @@ https://blog.csdn.net/huilaojia123/article/details/54096095
 plugin install with selenium:
 https://blog.csdn.net/Huilaojia123/article/details/53993167
 
+
+缺少目录，需要增加一个目录
+C:\jenkins\jobs\sean\htmlreports\HTML_20Report
+
+[htmlpublisher] Archiving HTML reports...
+[htmlpublisher] Archiving at PROJECT level C:\jenkins\logs\slaves\agent_sean to C:\Jenkins\jobs\sean\htmlreports\HTML_20Report
+ERROR: Directory 'C:\jenkins\logs\slaves\agent_sean' exists but failed copying to 'C:\Jenkins\jobs\sean\htmlreports\HTML_20Report'.
+ERROR: This is especially strange since your build otherwise succeeded.
+Build step 'Publish HTML reports' changed build result to FAILURE
+Finished: FAILURE
+
+#######################################################################################################
