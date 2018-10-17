@@ -1,0 +1,1 @@
+self.memory_dict.setdefault('module_name',[]).append(module_name.group(1))  #字典中同一个KEY增加多个值

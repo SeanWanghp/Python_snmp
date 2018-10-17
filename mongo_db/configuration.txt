@@ -49,7 +49,17 @@ C:\mongodb\bin\mongod.exe --remove
 ######################手工执行查看MONGDB##############################################
 
 C:\Program Files\MongoDB\Server\3.2\bin\mongo
-user runoobdb
+use runoobdb
+
 db.sites.find()
+db.sites.find('_id', 1)
+db.sites.drop()
+
 show tables
+runoobtable
+db.runoobtable.drop()
+db.dropDatabase()
+
+show dbs
+show collections
 
