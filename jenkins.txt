@@ -16,6 +16,7 @@ plugin install with selenium:
 https://blog.csdn.net/Huilaojia123/article/details/53993167
 
 
+##################################HTML will generator one empty file, still in process.....############
 缺少目录，需要增加一个目录
 C:\jenkins\jobs\sean\htmlreports\HTML_20Report
 
