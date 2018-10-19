@@ -171,7 +171,7 @@ class cli(e7_telnet, Para):
         self.step_command('bye', "# ")
 
     @deco(name= 'maojun')
-    def run_command(self, cli, baseline_version):
+    def run_command(self, cli, card_ip):
         '''
         upgrade SMx server detail process
         '''
@@ -210,17 +210,20 @@ class cli(e7_telnet, Para):
                 print "no match part found"
 
         print "memory_dict: ", self.memory_dict
-        self.mongo_write(None, 'print', 'lmd')
+        self.mongo_write(None, 'print', 'lmd', card_ip)
+        self.mongo_write(None, 'print', 'halm', card_ip)
         # print self.cli_command('par -a leak -0 ')
         # print self.cli_command('par -a mem -0 ')
         # print self.cli_command('par -a cpu -0 ')
 
-    @staticmethod
-    def mongo_write(memory_dict=None, action=None, memory_filter=None):
+    # @staticmethod
+    def mongo_write(self, memory_dict=None, action=None, memory_filter=None, card_ip=None):
         import pymongo
         '''
         http://www.runoob.com/python3/python-mongodb.html   MONGDB操作方法网址
         '''
+        self._x = []
+        self._y = []
         myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         user = myclient["maojun"]
         dbname = user["sean"]
@@ -231,7 +234,13 @@ class cli(e7_telnet, Para):
         elif action == 'print' and memory_filter != None:
             for x in dbname.find({"module_name": "%s" % memory_filter}):
                 for key, value in x.items():
-                    print "key is: %s, value is: %s" % (key, value)
+                    # print "key is: %s, value is: %s" % (key, value)
+                    if key == 'CUP':
+                        self._x.append(value)
+                    elif key == 'Memory':
+                        self._y.append(value)
+
+            self.mat_plt(self._x, self._y, memory_filter, card_ip)
 
         elif action == None and memory_filter != None:
             myquery = {"module_name": "%s"%memory_filter}
@@ -240,13 +249,42 @@ class cli(e7_telnet, Para):
         else:
             return None
 
-    def cli_lines(self, baseline_version):
+    def mat_plt(self, x, y, memory_filter, card_ip):
+        '''
+        plt.legend with loc value as following:
+        right
+        center left
+        upper right
+        lower right
+        best
+        center
+        lower left
+        center right
+        upper left
+        upper center
+        lower center
+        '''
+        import matplotlib.pyplot as plt
+        print "CPU: ", x
+        print "MEMORY: ", y
+        plt.plot(x, '-r', label = 'CPU')
+        plt.plot(y, '-g', label = 'MEMORY')
+
+        plt.legend(loc = 'center right')
+
+        plt.xlabel('time')
+        plt.ylabel('CPU&MEMORY')
+        # plt.text(2, 10, r'CPU, MEMORY')
+        plt.title('%s %s cpu&memory'%(card_ip, memory_filter))
+        plt.show()
+
+    def cli_lines(self, card_ip):
         '''
         cli_lines using for run cli command
         '''
         cli = '''ls'''
-        print baseline_version
-        return self.run_command(cli, baseline_version)
+        print card_ip
+        return self.run_command(cli, card_ip)
 
     def function_judge(self):
         '''
@@ -270,7 +308,8 @@ class cli(e7_telnet, Para):
 if __name__ == "__main__":
     getattr(cli, 'enter', setattr(cli, 'enter', '\n'))
     # sleep(600)
-    b = cli('10.245.46.215', 23, None)
-    b.cli_lines('run memory check in process..............')
+    card_ip = '10.245.46.215'
+    b = cli(card_ip, 23, None)
+    b.cli_lines(card_ip)
 
 
