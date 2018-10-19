@@ -5,8 +5,7 @@ __author__ = 'Sewang'
 # coding=gbk                                                                    #spell inspection cancelled
 #print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
 import logging, time, datetime
-import functools
-import telnetlib
+import functools, telnetlib
 
 ###############class with decorator, parameter transfer###################
 '''
@@ -21,7 +20,7 @@ class locker(object):
     methods, @staticmethod and @classmethod
     '''
     def __init__(self):
-        print("locker.__init__() should be not called.")
+        logging.warn("locker.__init__() should be not called.")
         self.name = "sean"
 
     @staticmethod
@@ -38,23 +37,24 @@ class locker(object):
         logging.warn("locker.release_finished() called.(%s Running finished)" % func.__name__)
 
 
-def deco(locker, **kwargs):
+def deco(**kwargs):
     '''
     cls implement acquire and release static method
     '''
     def _deco(func):
         def __deco(*args):
-            logging.warn("--%s---- %s called [%s]." % (kwargs, func.__name__, locker))
-            locker.acquire(func)   #import function 'acquire'
+            lock = locker()
+            logging.warn("--%s---- %s called [%s]." % (kwargs, func.__name__, lock))
+            lock.acquire(func)   #import function 'acquire'
             try:
                 return func(*args)
             finally:
-                locker.release(func)    #import function 'release'
-                locker.release_finished(func)  # import function 'release_2'
+                lock.release(func)    #import function 'release'
+                lock.release_finished(func)  # import function 'release_2'
         return __deco
     return _deco
 
-# @deco(locker, h = "haha")
+# @deco(h = "haha")
 # def myfunc():
 #     '''
 #     __doc__ running in process
@@ -200,3 +200,11 @@ def clock(func):
         print('[%0.8fs] %s(%s) -> %r ' % (elapsed, name, arg_str, result))
         return result
     return clocked
+
+def deco_basic(func):
+    def _deco(*args):
+        print("----------%s running in process, please waiting-------------" % func.__name__)
+        ret = func(*args)
+        print("----------%s running finished. Result is: %s-----------------" % (func.__name__, ret))
+        return ret
+    return _deco
