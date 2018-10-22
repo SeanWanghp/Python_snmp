@@ -171,10 +171,12 @@ class cli(e7_telnet, Para):
         self.step_command('bye', "# ")
 
     @deco(name= 'maojun')
-    def run_command(self, cli, card_ip):
+    def run_command(self, module_a, module_b, card_ip):
         '''
         upgrade SMx server detail process
         '''
+        self.module_a = module_a
+        self.module_b = module_b
         self.memory_dict = {}
         self.memory_update = {}
         import random
@@ -210,8 +212,12 @@ class cli(e7_telnet, Para):
                 print "no match part found"
 
         print "memory_dict: ", self.memory_dict
-        self.mongo_write(None, 'print', 'lmd', card_ip)
-        self.mongo_write(None, 'print', 'halm', card_ip)
+        import threading
+        module_lib = [module_a, module_b]
+        self.plt = None
+        for module_run in module_lib:
+            self.plt = self.mongo_write(None, 'print', module_run, card_ip)
+        self.plt.show()
         # print self.cli_command('par -a leak -0 ')
         # print self.cli_command('par -a mem -0 ')
         # print self.cli_command('par -a cpu -0 ')
@@ -224,6 +230,7 @@ class cli(e7_telnet, Para):
         '''
         self._x = []
         self._y = []
+        self.plt ='static'
         myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         user = myclient["maojun"]
         dbname = user["sean"]
@@ -240,7 +247,12 @@ class cli(e7_telnet, Para):
                     elif key == 'Memory':
                         self._y.append(value)
 
-            self.mat_plt(self._x, self._y, memory_filter, card_ip)
+            if self.plt == 'static':
+                plt = self.static_plt(self._x, self._y, memory_filter, card_ip)
+                return plt
+            if self.plt == 'dynamic':
+                plt = self.dynamic_plt(self._x, self._y, memory_filter, card_ip)
+                return plt
 
         elif action == None and memory_filter != None:
             myquery = {"module_name": "%s"%memory_filter}
@@ -249,42 +261,67 @@ class cli(e7_telnet, Para):
         else:
             return None
 
-    def mat_plt(self, x, y, memory_filter, card_ip):
+    def static_plt(self, x, y, memory_filter, card_ip):
         '''
+        画图参考： https://www.cnblogs.com/zhizhan/p/5615947.html
+        颜色参考： https://www.cnblogs.com/darkknightzh/p/6117528.html
         plt.legend with loc value as following:
-        right
-        center left
-        upper right
-        lower right
-        best
-        center
-        lower left
-        center right
-        upper left
-        upper center
-        lower center
+        right, center left, upper right, lower right, best, center
+        lower left, center right, upper left, upper center, lower center
         '''
         import matplotlib.pyplot as plt
         print "CPU: ", x
         print "MEMORY: ", y
-        plt.plot(x, '-r', label = 'CPU')
-        plt.plot(y, '-g', label = 'MEMORY')
+        self.cpu_co = ''
+        self.mem_co = ''
+        if memory_filter == self.module_a:
+            self.cpu_co = '-r'
+            self.mem_co = '-g'
+        elif memory_filter == self.module_b:
+            self.cpu_co = '-m'
+            self.mem_co = '-b'
+        plt.plot(x, self.cpu_co, label='%s CPU'%memory_filter)
+        plt.plot(y, self.mem_co, label='%s MEMORY'%memory_filter)
 
-        plt.legend(loc = 'center right')
-
+        plt.legend(loc= 'center right')
         plt.xlabel('time')
         plt.ylabel('CPU&MEMORY')
-        # plt.text(2, 10, r'CPU, MEMORY')
-        plt.title('%s %s cpu&memory'%(card_ip, memory_filter))
-        plt.show()
+        plt.title('%s cpu&memory'%(card_ip))
+        return plt
 
-    def cli_lines(self, card_ip):
+    def dynamic_plt(self, x, y, memory_filter, card_ip):
+        import matplotlib.pyplot as plt
+        import numpy as np
+        '''
+        Reference:   C:\Python27\Doc\basic_lib\matlib_basic\dynamic_matlib.py
+        '''
+        fig, ax = plt.subplots()
+        # fig2, ax2=plt.subplots()
+        y1 = []
+        y2 = []
+        for i,j in zip(x, y):
+            y1.append(i)
+            y2.append(j)
+            plt.cla()
+            plt.title('%s cpu&memory'%(card_ip))
+            plt.xlabel("Time")
+            plt.ylabel("CPU&MEMORY")
+            plt.xlim(0, 55)
+            plt.ylim(0, 50)
+            plt.grid()
+            plt.plot(y1, label='%s CPU'%memory_filter)
+            plt.plot(y2, label='%s MEMORY'%memory_filter)
+            plt.legend(loc='upper right')
+
+            plt.pause(0.001)
+        return plt
+
+    def cli_lines(self, module_a, module_b, card_ip):
         '''
         cli_lines using for run cli command
         '''
-        cli = '''ls'''
         print card_ip
-        return self.run_command(cli, card_ip)
+        return self.run_command(module_a, module_b, card_ip)
 
     def function_judge(self):
         '''
@@ -309,7 +346,9 @@ if __name__ == "__main__":
     getattr(cli, 'enter', setattr(cli, 'enter', '\n'))
     # sleep(600)
     card_ip = '10.245.46.215'
+    module_a = 'lmd'
+    module_b = 'halm'
     b = cli(card_ip, 23, None)
-    b.cli_lines(card_ip)
+    b.cli_lines(module_a, module_b, card_ip)
 
 
