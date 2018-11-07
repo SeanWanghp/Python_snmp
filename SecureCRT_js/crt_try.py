@@ -21,7 +21,7 @@ def CreateTab(host, tabName):
 
 
 def initTabSession(oneTab):
-    usr      = 'e7support\n'
+    usr      = 'exxxxxx\n'
     pwd      = 'admin\n'
     cfgCli   = 'set session pager disabled timeout disabled\n'
     disAlarm = 'set session alarm-notif disabled event-notif disabled tca-notif disabled\n'
