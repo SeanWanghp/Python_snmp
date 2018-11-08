@@ -1,20 +1,28 @@
 # coding=utf-8                                           #this must be in first line
-#C:\Python27\Doc python
-__author__='Sean Wang'
-#data@:2018-10-15
-# coding=gbk                                             #spell inspection cancelled
-#print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
-
-
-from E7.SLV384.deco_slv import deco
+from E7.SLV384.deco_slv import deco, slv_log
 from telnetlib import Telnet
 from time import sleep
 import logging
-# logging.basicConfig函数对日志的输出格式及方式做相关
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+# C:\Python27\Doc python
+__author__='Sean Wang'
+# data@:2018-10-15
+# coding=gbk                                             #spell inspection cancelled
+# print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
 
-class Para(object):         #property need 'object' for running
+
+class _Log(object):
+    def __init__(self):
+        pass
+
+    @staticmethod
+    def _lg(mess):
+        # logging.basicConfig函数对日志的输出格式及方式做相关
+        logging.basicConfig(level=logging.DEBUG,
+                            format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s')
+        return logging.warn(mess)
+
+
+class Para(object):         # property need 'object' for running
     '''
     # a = Para(5)
     # print a.host
@@ -24,11 +32,17 @@ class Para(object):         #property need 'object' for running
     def __init__(self):
         self._port = None
 
+    def __call__(self, _host):
+        self.__dict__ = {'_host': '%s'%_host,
+                            '_port': '23',
+                            '_type': 'Telnet'}
+        return self.__dict__
+
     def get_port(self):
         return self._port
 
     def set_port(self, value):
-        print "_port is 23"
+        print "self._port must be 23"
         if not isinstance(value, int):
             raise ValueError('host must be an integer!')
         if value != 23:
@@ -49,30 +63,40 @@ class Para(object):         #property need 'object' for running
         if score < 0 or score > 100:
             raise ValueError('invalid score')
         self._score = score
+        print 'self._score value is: %s'%self._score
+        # return self._score
 
 
-class e7_telnet(object):
+class e7_telnet(_Log):
     def __init__(self):
-        print "self:", self()
-        self.function_judge()
+        _Log.__init__(self)
+        self.function_judge()       #实例化e7_telnet以后不能调用
+        self.Tel = None
         pass
 
-    def __call__(self):
-        self.__dict__ = {'_host': 'x.x.x.x',
-                            '_port': '23',
-                            '_type': 'ssh'}
-        return self.__dict__
+    def _getconnection(self, *args, **kwargs):
+        """Can be overridden to use a custom connection."""
+        return self.telnet_e7(*args, **kwargs)
 
+    def _reconnection(self, *args):
+        print "session: ", self.session
+        if isinstance(self.Tel, object):
+            return self.telnet_e7(*args, **kwargs)
+        else:
+            self.Tel.close()
+            return self.telnet_e7(*args, **kwargs)
 
     def telnet_e7(self, _host, _port, _type=None):
         '''
         Telent to _host and return the session
         '''
-        self.Tel = Telnet(_host, _port)
-        # self.Tel.debuglevel(0)
-        res = self.Tel.read_until(": " or "# " or "~ ")
-        return self.Tel
-
+        if _type is None:
+            self.Tel = Telnet(_host, _port)
+            # self.Tel.debuglevel(0)
+            self._lg(self.Tel.read_until(": " or "# " or "~ ", 10))
+            return self.Tel
+        else:
+            pass
 
 import re as sre
 rePrompt                    =  sre.compile('\w+\d+>')
@@ -84,31 +108,31 @@ reLoginPrompt               =  sre.compile('\w+\s+login:',    sre.IGNORECASE)
 rePasswordPrompt            =  sre.compile('Password:',    sre.IGNORECASE)
 reConfirmPrompt             =  sre.compile('y/N',    sre.IGNORECASE)
 reAXOSConfirmPrompt         =  sre.compile('~# ',    sre.IGNORECASE)
-reAccuteConfirmPrompt         =  sre.compile('E3VCP>',    sre.IGNORECASE)
+reAccuteConfirmPrompt       =  sre.compile('E3VCP>',    sre.IGNORECASE)
 
-class cli(e7_telnet, Para):
+
+class _cli(e7_telnet, Para, _Log):
     def __init__(self, _host, _port, _type):
-        super(cli, self).__init__()
-
-        # self.enter = '\r\n'
-        self.res = ''
-        self._host = _host
-        Para().port = _port         #import property class to check parameter
-        self._port = Para().port
-        self._type = _type
-        self.session = self.telnet_e7(self._host, self._port, self._type)
-        self.score = 10
-        print self.score
-        self.login()
+        super(_cli, self).__init__()
         self.promptList = [rePrompt, reTL1Prompt, reShellPrompt, reLinuxPrompt, reLoginPrompt, rePasswordPrompt,
                            reConfirmPrompt, reC7Prompt, reAXOSConfirmPrompt, reAccuteConfirmPrompt]
+        # self.enter = '\r\n'
+        self.score = 10
+        self._host = _host
+        print "self:", self('%s' % self._host)
+        self.port = _port
+        # Para().port = _port         #import property class to check parameter
+        self._port = Para().port
+        self._type = _type
+        self.session = self.tel_init(self, self._host, self._port, self._type)
+        self._get_login()
 
     def __new__(cls, *args, **kwargs):
         '''
         Give a prompt for user when system running start.
         '''
-        logging.warn('SMX server2 upgrade in process, please waiting...................')
-        return object.__new__(cls, *args, **kwargs)   #__init__will not running if no return
+        logging.warn('AXOS card CPU&MEMORY is checking in process, please waiting...................')
+        return object.__new__(cls)   #__init__will not running if no return
 
     def __del__(self):
         '''
@@ -117,21 +141,37 @@ class cli(e7_telnet, Para):
         self.session.write('exit' + self.enter)
         try:
             self.session.close()
-            logging.warn("telnet session closed!")
+            return self._lg("telnet session closed!")
+            # print "session closed"
         except BaseException, e:
             print e.message
+
+    @classmethod
+    def tel_init(cls, tel, host, port, _type):
+        """Can be overridden telnet connection"""
+        sess = tel._getconnection(host, port, _type)
+        return sess
+
+    def _get_login(self, *args):
+        """Can be overridden login."""
+        return self.login(*args)
 
     def login(self):
         '''
         login to the server
         '''
-        if self._type == None:
+        self.res =[]
+        if self._type is None:
             self.session.write("root" + self.enter)
-            self.res += self.session.read_until(": ")
+            self.res += [self.session.read_until(": ")]
             self.session.write("root" + self.enter)
-            self.res += self.session.read_until("# ")
+            self.res += [self.session.read_until("# ")]
             self.session.write("pwd" + self.enter)
-            self.res += self.session.read_until("# ")
+            self.res += [self.session.read_until("# ")]
+            print "res:", self.res
+            return self.res
+        else:
+            print "telnet failed"
 
     def cli_command(self, command):
         '''
@@ -149,15 +189,14 @@ class cli(e7_telnet, Para):
                 print "ignore one command"
         return self.resu
 
-    def step_command(self, command, prompt):
+    def step_command(self, command, prompt=None):
         '''
         :param command:
         :param prompt:
         :return: output from the command
         '''
         self.session.write(command + self.enter)
-        print self.session.read_until(prompt)
-
+        return self.session.read_until(prompt)
 
     def ftp_get_baseline(self, ftp_ip, ftp_user, ftp_password, baseline_version):
         '''
@@ -170,11 +209,12 @@ class cli(e7_telnet, Para):
         self.step_command('get %s'%baseline_version, "> ")
         self.step_command('bye', "# ")
 
-    @deco(name= 'maojun')
-    def run_command(self, module_a, module_b, card_ip):
+    @slv_log(name='maojun')
+    def memory_check_run(self, module_a, module_b, card_ip):
         '''
         upgrade SMx server detail process
         '''
+        print "memory checing"
         self.module_a = module_a
         self.module_b = module_b
         self.memory_dict = {}
@@ -221,6 +261,7 @@ class cli(e7_telnet, Para):
         # print self.cli_command('par -a leak -0 ')
         # print self.cli_command('par -a mem -0 ')
         # print self.cli_command('par -a cpu -0 ')
+        return all_memory
 
     # @staticmethod
     def mongo_write(self, memory_dict=None, action=None, memory_filter=None, card_ip=None):
@@ -230,7 +271,8 @@ class cli(e7_telnet, Para):
         '''
         self._x = []
         self._y = []
-        self.plt ='static'
+        plt_status = ['static', 'dynamic']
+        self.plt_st = plt_status[0]
         myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         user = myclient["maojun"]
         dbname = user["sean"]
@@ -247,10 +289,10 @@ class cli(e7_telnet, Para):
                     elif key == 'Memory':
                         self._y.append(value)
 
-            if self.plt == 'static':
+            if self.plt_st == 'static':
                 plt = self.static_plt(self._x, self._y, memory_filter, card_ip)
                 return plt
-            if self.plt == 'dynamic':
+            if self.plt_st == 'dynamic':
                 plt = self.dynamic_plt(self._x, self._y, memory_filter, card_ip)
                 return plt
 
@@ -306,13 +348,13 @@ class cli(e7_telnet, Para):
             plt.title('%s cpu&memory'%(card_ip))
             plt.xlabel("Time")
             plt.ylabel("CPU&MEMORY")
-            plt.xlim(0, 55)
+            plt.xlim(0, len(x))
             plt.ylim(0, 50)
             plt.grid()
             plt.plot(y1, label='%s CPU'%memory_filter)
             plt.plot(y2, label='%s MEMORY'%memory_filter)
             plt.legend(loc='upper right')
-
+            # plt.draw()
             plt.pause(0.001)
         return plt
 
@@ -321,7 +363,7 @@ class cli(e7_telnet, Para):
         cli_lines using for run cli command
         '''
         print card_ip
-        return self.run_command(module_a, module_b, card_ip)
+        return self.memory_check_run(module_a, module_b, card_ip)
 
     def function_judge(self):
         '''
@@ -331,8 +373,8 @@ class cli(e7_telnet, Para):
         '''
         import inspect
         print "inspect process starting ---------------------------------"
-        print inspect.ismethod(self.run_command)
-        print inspect.isclass(cli)
+        print inspect.ismethod(self.memory_check_run)
+        print inspect.isclass(_cli)
         for key, method in inspect.getmembers(e7_telnet, inspect.ismethod):
             print "key: %s, methond: %s"%(key, method)
             # for item in method:
@@ -343,12 +385,14 @@ class cli(e7_telnet, Para):
 
 
 if __name__ == "__main__":
-    getattr(cli, 'enter', setattr(cli, 'enter', '\n'))
-    # sleep(600)
+    if hasattr(_cli, 'enter') is False:
+        getattr(_cli, 'enter', setattr(_cli, 'enter', '\n'))
+        # sleep(600)
     card_ip = '10.245.46.215'
     module_a = 'lmd'
     module_b = 'halm'
-    b = cli(card_ip, 23, None)
+    b = _cli(card_ip, 23, None)
+    print "_cli 属性有哪些：", b.__dict__
     b.cli_lines(module_a, module_b, card_ip)
 
 
