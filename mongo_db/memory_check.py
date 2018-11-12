@@ -9,8 +9,23 @@ __author__='Sean Wang'
 # coding=gbk                                             #spell inspection cancelled
 # print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
 
+import re as sre
+rePrompt                    =  sre.compile('\w+\d+>')
+reTL1Prompt                 =  sre.compile('\w+\d+>|\w+\.>')
+reShellPrompt               =  sre.compile('\w+:\d+\.\d+:>|\w+\d+:\d+\.\d+:>')
+reLinuxPrompt               =  sre.compile('# ')
+reC7Prompt                  =  sre.compile('COMPLD|DENY')    #This is for C7 TL1 specically, TL1 command not need 'COMPLD' instead of self.enter
+reLoginPrompt               =  sre.compile('\w+\s+login:',    sre.IGNORECASE)
+rePasswordPrompt            =  sre.compile('Password:',    sre.IGNORECASE)
+reConfirmPrompt             =  sre.compile('y/N',    sre.IGNORECASE)
+reAXOSConfirmPrompt         =  sre.compile('~# ',    sre.IGNORECASE)
+reAccuteConfirmPrompt       =  sre.compile('E3VCP>',    sre.IGNORECASE)
+
 
 class _Log(object):
+    '''
+    log part for all class
+    '''
     def __init__(self):
         pass
 
@@ -24,10 +39,9 @@ class _Log(object):
 
 class Para(object):         # property need 'object' for running
     '''
-    # a = Para(5)
-    # print a.host
-    # a.host = 100
-    # print a.host
+    property with all calsss checking
+    # a = Para(5)   # print a.host
+    # a.host = 100  # print a.host
     '''
     def __init__(self):
         self._port = None
@@ -68,100 +82,55 @@ class Para(object):         # property need 'object' for running
 
 
 class e7_telnet(_Log):
+    '''
+    telnet part for all class
+    '''
     def __init__(self):
+        # self.Tel = None
         _Log.__init__(self)
         self.function_judge()       #实例化e7_telnet以后不能调用
-        self.Tel = None
         pass
 
     def _getconnection(self, *args, **kwargs):
         """Can be overridden to use a custom connection."""
-        return self.telnet_e7(*args, **kwargs)
-
-    def _reconnection(self, *args):
-        print "session: ", self.session
-        if isinstance(self.Tel, object):
-            return self.telnet_e7(*args, **kwargs)
+        if self.telnet_e7(*args, **kwargs):
+            pass
         else:
-            self.Tel.close()
-            return self.telnet_e7(*args, **kwargs)
+            self._reconnection(*args, **kwargs)
+        return self.Tel
 
-    def telnet_e7(self, _host, _port, _type=None):
+    def _reconnection(self, *args, **kwargs):
+        # print "session: ", self.session
+        if self.session:
+            pass
+        else:
+            print "please check network and wait for 30s to reconnection!!!!"
+            sleep(30)
+            self.telnet_e7(*args, **kwargs)
+        return self.Tel
+
+    def telnet_e7(self, tn, _host, _port, _type=None):
         '''
         Telent to _host and return the session
         '''
-        if _type is None:
+        if tn is None:
             self.Tel = Telnet(_host, _port)
             # self.Tel.debuglevel(0)
             self._lg(self.Tel.read_until(": " or "# " or "~ ", 10))
-            return self.Tel
         else:
             pass
-
-import re as sre
-rePrompt                    =  sre.compile('\w+\d+>')
-reTL1Prompt                 =  sre.compile('\w+\d+>|\w+\.>')
-reShellPrompt               =  sre.compile('\w+:\d+\.\d+:>|\w+\d+:\d+\.\d+:>')
-reLinuxPrompt               =  sre.compile('# ')
-reC7Prompt                  =  sre.compile('COMPLD|DENY')    #This is for C7 TL1 specically, TL1 command not need 'COMPLD' instead of self.enter
-reLoginPrompt               =  sre.compile('\w+\s+login:',    sre.IGNORECASE)
-rePasswordPrompt            =  sre.compile('Password:',    sre.IGNORECASE)
-reConfirmPrompt             =  sre.compile('y/N',    sre.IGNORECASE)
-reAXOSConfirmPrompt         =  sre.compile('~# ',    sre.IGNORECASE)
-reAccuteConfirmPrompt       =  sre.compile('E3VCP>',    sre.IGNORECASE)
+        return self.Tel
 
 
-class _cli(e7_telnet, Para, _Log):
-    def __init__(self, _host, _port, _type):
-        super(_cli, self).__init__()
-        self.promptList = [rePrompt, reTL1Prompt, reShellPrompt, reLinuxPrompt, reLoginPrompt, rePasswordPrompt,
-                           reConfirmPrompt, reC7Prompt, reAXOSConfirmPrompt, reAccuteConfirmPrompt]
-        # self.enter = '\r\n'
-        self.score = 10
-        self._host = _host
-        print "self:", self('%s' % self._host)
-        self.port = _port
-        # Para().port = _port         #import property class to check parameter
-        self._port = Para().port
-        self._type = _type
-        self.session = self.tel_init(self, self._host, self._port, self._type)
-        self._get_login()
-
-    def __new__(cls, *args, **kwargs):
-        '''
-        Give a prompt for user when system running start.
-        '''
-        logging.warn('AXOS card CPU&MEMORY is checking in process, please waiting...................')
-        return object.__new__(cls)   #__init__will not running if no return
-
-    def __del__(self):
-        '''
-        close the session
-        '''
-        self.session.write('exit' + self.enter)
-        try:
-            self.session.close()
-            return self._lg("telnet session closed!")
-            # print "session closed"
-        except BaseException, e:
-            print e.message
-
-    @classmethod
-    def tel_init(cls, tel, host, port, _type):
-        """Can be overridden telnet connection"""
-        sess = tel._getconnection(host, port, _type)
-        return sess
-
-    def _get_login(self, *args):
-        """Can be overridden login."""
-        return self.login(*args)
+class _Login(object):
+    '''
+    login to the server
+    '''
+    def __init__(self):
+        pass
 
     def login(self):
-        '''
-        login to the server
-        '''
-        self.res =[]
-        if self._type is None:
+        if self._type is 'AXOS':
             self.session.write("root" + self.enter)
             self.res += [self.session.read_until(": ")]
             self.session.write("root" + self.enter)
@@ -171,14 +140,18 @@ class _cli(e7_telnet, Para, _Log):
             print "res:", self.res
             return self.res
         else:
-            print "telnet failed"
+            raise Exception("equipment type can not find in table")
+
+
+class _Command(object):
+    def __init__(self):
+        pass
 
     def cli_command(self, command):
         '''
         :param command: CLI
         :return: output with the command
         '''
-        self.resu = ''
         for cli in command.split('\n'):
             if not cli.strip().startswith('#'):
                 self.session.write(command.strip() + self.enter)
@@ -198,70 +171,12 @@ class _cli(e7_telnet, Para, _Log):
         self.session.write(command + self.enter)
         return self.session.read_until(prompt)
 
-    def ftp_get_baseline(self, ftp_ip, ftp_user, ftp_password, baseline_version):
-        '''
-        using ftp server to get the baseline
-        '''
-        self.step_command('ftp %s'%ftp_ip, ": ")
-        self.step_command('%s'%ftp_user, ":")
-        self.step_command('%s'%ftp_password, "> ")
-        self.step_command('ls', "> ")
-        self.step_command('get %s'%baseline_version, "> ")
-        self.step_command('bye', "# ")
-
-    @slv_log(name='maojun')
-    def memory_check_run(self, module_a, module_b, card_ip):
-        '''
-        upgrade SMx server detail process
-        '''
-        print "memory checing"
-        self.module_a = module_a
-        self.module_b = module_b
-        self.memory_dict = {}
-        self.memory_update = {}
-        import random
-        self.cli_command('cd /var/log/mem_check')
-        self.cli_command('cat lmd.log')
-        self.cli_command('cat /var/log/mem_check_results.log ')
-        all_memory = self.cli_command('ps aux --sort -rss')
-        with open('memory.txt', 'w+') as f:
-            f.write(all_memory)
-        module_re = sre.compile("\s+\/\w+\/\w+\/(\w+)")
-        memory_re = sre.compile("root\s+\d+\s+(\d+.\d+)\s+(\d+.\d+)")
-        for line_memory in all_memory.splitlines():
-            # print line_memory
-            self.id_number = random.randint(1, 1000000000000000)
-            memory_content = memory_re.match(line_memory)
-            if memory_content:
-                if memory_content.group(1) != '0.0' and float(memory_content.group(2)) >= 5:
-                    module_name = module_re.search(line_memory)
-                    if module_name:
-                        print "module_name: \033[0;31m%s\033[0m"%module_name.group(1)
-                        self.memory_dict['module_name'] = module_name.group(1)
-                    else:
-                        print "module name not matched"
-                    print "CPU: \033[0;31m%s\033[0m" % memory_content.group(1)
-                    print "Memory: \033[0;31m%s\033[0m" % memory_content.group(2)
-                    self.memory_dict['CUP'] = memory_content.group(1)
-                    self.memory_dict['Memory'] = memory_content.group(2)
-                    self.memory_dict['_id'] = self.id_number
-                    self.mongo_write(self.memory_dict, 'add')
-                else:
-                    continue
-            else:
-                print "no match part found"
-
-        print "memory_dict: ", self.memory_dict
-        import threading
-        module_lib = [module_a, module_b]
-        self.plt = None
-        for module_run in module_lib:
-            self.plt = self.mongo_write(None, 'print', module_run, card_ip)
-        self.plt.show()
-        # print self.cli_command('par -a leak -0 ')
-        # print self.cli_command('par -a mem -0 ')
-        # print self.cli_command('par -a cpu -0 ')
-        return all_memory
+class _Mongogo(object):
+    '''
+    mongo database running
+    '''
+    def __init__(self):
+        pass
 
     # @staticmethod
     def mongo_write(self, memory_dict=None, action=None, memory_filter=None, card_ip=None):
@@ -303,6 +218,13 @@ class _cli(e7_telnet, Para, _Log):
         else:
             return None
 
+class _Matlibplt(object):
+    '''
+    matlib running
+    '''
+    def __init__(self):
+        pass
+
     def static_plt(self, x, y, memory_filter, card_ip):
         '''
         画图参考： https://www.cnblogs.com/zhizhan/p/5615947.html
@@ -312,8 +234,8 @@ class _cli(e7_telnet, Para, _Log):
         lower left, center right, upper left, upper center, lower center
         '''
         import matplotlib.pyplot as plt
-        print "CPU: ", x
-        print "MEMORY: ", y
+        print "CPU: {}".format(x)
+        print "MEMORY: {}".format(y)
         self.cpu_co = ''
         self.mem_co = ''
         if memory_filter == self.module_a:
@@ -331,7 +253,8 @@ class _cli(e7_telnet, Para, _Log):
         plt.title('%s cpu&memory'%(card_ip))
         return plt
 
-    def dynamic_plt(self, x, y, memory_filter, card_ip):
+    @staticmethod
+    def dynamic_plt(x, y, memory_filter, card_ip):
         import matplotlib.pyplot as plt
         import numpy as np
         '''
@@ -358,6 +281,120 @@ class _cli(e7_telnet, Para, _Log):
             plt.pause(0.001)
         return plt
 
+class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
+    def __init__(self, _host, _port, _type):
+        super(_Cli, self).__init__()
+        self.promptList = [rePrompt, reTL1Prompt, reShellPrompt, reLinuxPrompt, reLoginPrompt, rePasswordPrompt,
+                           reConfirmPrompt, reC7Prompt, reAXOSConfirmPrompt, reAccuteConfirmPrompt]
+        # self.enter = '\r\n'
+        self.score = 10
+        self._host = _host
+        print "self: ", self('%s' % self._host)     #__call__ will showing up
+        self.port = _port               # Para().port = _port   #import property class to check parameter
+        self._port = Para().port
+        self._type = _type
+        self.session = None
+        self.res = []
+        self.resu = ''
+        self.session = self.tel_init(self, self.session, self._host, self._port, self._type)
+        self._get_login()
+
+    def __new__(cls, *args, **kwargs):
+        '''
+        Give a prompt for user when system running start.
+        '''
+        logging.warn('AXOS card CPU&MEMORY is checking in process, please waiting...................')
+        return object.__new__(cls)   #__init__will not running if no return
+
+    def __del__(self):
+        '''
+        close the session
+        '''
+        self.session.write('exit' + self.enter)
+        try:
+            self.session.close()
+            return self._lg("telnet session closed!")
+            # print "session closed"
+        except BaseException, e:
+            print e.message
+
+    @classmethod
+    def tel_init(cls, tel, tn, host, port, _type):
+        """Can be overridden telnet connection"""
+        sess = tel._getconnection(tn, host, port, _type)
+        return sess
+
+    def _get_login(self, *args):
+        """Can be overridden login."""
+        return self.login(*args)
+
+    def ftp_get_baseline(self, ftp_ip, ftp_user, ftp_password, baseline_version):
+        '''
+        using ftp server to get the baseline
+        '''
+        self.step_command('ftp %s'%ftp_ip, ": ")
+        self.step_command('%s'%ftp_user, ":")
+        self.step_command('%s'%ftp_password, "> ")
+        self.step_command('ls', "> ")
+        self.step_command('get %s'%baseline_version, "> ")
+        self.step_command('bye', "# ")
+
+    @slv_log(name='maojun')
+    def memory_check_run(self, module_a, module_b, card_ip):
+        '''
+        check axos memory in process
+        '''
+        print "memory checking"
+        self.module_a = module_a
+        self.module_b = module_b
+        self.memory_dict = {}
+        self.memory_update = {}
+        self.id_number = int
+        self.plt = None
+        import random
+        self.cli_command('cd /var/log/mem_check')
+        # self.cli_command('cat lmd.log')
+        # self.cli_command('cat /var/log/mem_check_results.log ')
+        all_memory = self.cli_command('ps aux --sort -rss')
+        with open('memory.txt', 'w+') as f:
+            f.write(all_memory)
+        module_re = sre.compile("\s+\/\w+\/\w+\/(\w+)")
+        memory_re = sre.compile("root\s+\d+\s+(\d+.\d+)\s+(\d+.\d+)")
+        for line_memory in all_memory.splitlines():
+            # print line_memory
+            self.id_number = random.randint(1, 1000000000000000)
+            memory_content = memory_re.match(line_memory)
+            if memory_content:
+                if memory_content.group(1) != '0.0' and float(memory_content.group(2)) >= 5:
+                    module_name = module_re.search(line_memory)
+                    if module_name:
+                        print "module_name: \033[0;31m%s\033[0m"%module_name.group(1)
+                        self.memory_dict['module_name'] = module_name.group(1)
+                    else:
+                        print "module name not matched"
+                    print "CPU: \033[0;31m%s\033[0m" % memory_content.group(1)
+                    print "Memory: \033[0;31m%s\033[0m" % memory_content.group(2)
+                    self.memory_dict['CUP'] = memory_content.group(1)
+                    self.memory_dict['Memory'] = memory_content.group(2)
+                    self.memory_dict['_id'] = self.id_number
+                    self.mongo_write(self.memory_dict, 'add')
+                else:
+                    continue
+            else:
+                continue
+
+        print "memory_dict: {}".format(self.memory_dict)
+        import threading
+        module_lib = [module_a, module_b]
+        for module_run in module_lib:
+            self.plt = self.mongo_write(None, 'print', module_run, card_ip)
+        self.plt.show()
+        # print self.cli_command('par -a leak -0 ')
+        # print self.cli_command('par -a mem -0 ')
+        # print self.cli_command('par -a cpu -0 ')
+        return all_memory
+
+
     def cli_lines(self, module_a, module_b, card_ip):
         '''
         cli_lines using for run cli command
@@ -374,7 +411,7 @@ class _cli(e7_telnet, Para, _Log):
         import inspect
         print "inspect process starting ---------------------------------"
         print inspect.ismethod(self.memory_check_run)
-        print inspect.isclass(_cli)
+        print inspect.isclass(_Cli)
         for key, method in inspect.getmembers(e7_telnet, inspect.ismethod):
             print "key: %s, methond: %s"%(key, method)
             # for item in method:
@@ -385,14 +422,12 @@ class _cli(e7_telnet, Para, _Log):
 
 
 if __name__ == "__main__":
-    if hasattr(_cli, 'enter') is False:
-        getattr(_cli, 'enter', setattr(_cli, 'enter', '\n'))
+    if hasattr(_Cli, 'enter') is False:
+        getattr(_Cli, 'enter', setattr(_Cli, 'enter', '\n'))
         # sleep(600)
     card_ip = '10.245.46.215'
     module_a = 'lmd'
     module_b = 'halm'
-    b = _cli(card_ip, 23, None)
-    print "_cli 属性有哪些：", b.__dict__
+    b = _Cli(card_ip, 23, 'AXOS')
+    print "_cli 属性有哪些：{}".format(b.__dict__)
     b.cli_lines(module_a, module_b, card_ip)
-
-
