@@ -1,0 +1,6 @@
+paginate false
+                show card
+                show version
+                show igmp
+                show vlan
+                show interface summary
