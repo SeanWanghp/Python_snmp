@@ -1,0 +1,49 @@
+python:
+#Singapo work website:     https://www.make-it-in-germany.com/en/jobs/looking-for-a-job/
+
+
+装饰器：@log
+参数装饰器（property):
+	参数检查（Agrument checking）
+	缓存（Caching）
+	代理（Proxy）
+	提供上下文（Context Provider）
+	
+类的继承（多重继承）：class a(b,c)
+
+多态：
+	def aa(b,c):
+		b.run(c)	
+		
+动态加载：__import__
+
+魔法方法：getattr(a, "name", setattr(a, 'name', 'sean')
+
+正则表达试：re.compile()
+
+进程和线程：threading
+
+
+
+匿名函数：lambda( x: x*x, [1,2,3])
+
+
+单例模式，可以使创建对像只生成一个地址：
+class Singleton(object):
+    def __new__(cls,a):
+        '如果不用这个单例模式会占用二个不同地址，用了就只占用一个地址'
+        if not hasattr(cls, '_instance'):
+            cls._instance = object.__new__(cls)
+        return cls._instance
+
+    def __init__(self, a):
+        self.a = a
+
+    def aa(self):
+        print(self.a)
+
+s1=Singleton(1)
+s2=Singleton(2)
+print id(s1)
+print id(s2)
+
