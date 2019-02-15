@@ -3,9 +3,11 @@ from E7.SLV384.deco_slv import deco, slv_log
 from telnetlib import Telnet
 from time import sleep
 import logging
+import matplotlib.pyplot as plt
 # C:\Python27\Doc python
-__author__='Sean Wang'
+__author__ = 'Maojun Wang'
 # data@:2018-10-15
+# upgrade data@:2019-01-23
 # coding=gbk                                             #spell inspection cancelled
 # print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
 
@@ -44,7 +46,7 @@ class Para(object):         # property need 'object' for running
     # a.host = 100  # print a.host
     '''
     def __init__(self):
-        self._port = None
+        self._port = None       #变量前如果加二个下划线就会变成私有变量，外面类无法访问
 
     def __call__(self, _host):
         self.__dict__ = {'_host': '%s'%_host,
@@ -81,7 +83,46 @@ class Para(object):         # property need 'object' for running
         # return self._score
 
 
-class e7_telnet(_Log):
+class Singleton(type):
+    def __call__(cls, *args, **kwargs):
+        '''
+        单例模式的使用可以有效减少内存消耗, https://www.cnblogs.com/yxi-liu/p/singleton.html
+        sample as path: C:\Python27\Doc\basic_lib\_metaclass_lib\_meta_abc_singleton.py
+        '''
+        if not hasattr(cls, '_instance'):
+            cls._instance = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instance
+
+    def __new__(cls, name, bases, dct):
+        print "Singleton new"
+        return type.__new__(cls, name, bases, dct)
+
+    def __init__(cls, name, bases, dct):
+        print "Singleton init"
+        super(Singleton, cls).__init__(name, bases, dct)
+
+
+class tel_e7(object):
+    __metaclass__ = Singleton
+
+    def __init__(self):
+        self.Tel = None
+
+    def telnet_e7(self, tn, _host, _port, _type=None):
+        '''
+        Telent to _host and return the session
+        '''
+        if tn is None:
+            self.Tel = Telnet(_host, _port)
+            print "telnet in process"
+            # self.Tel.debuglevel(0)
+            self._lg(self.Tel.read_until(": " or "# " or "~ ", 10))
+        else:
+            pass
+        return self.Tel
+
+
+class e7_telnet(_Log, tel_e7):
     '''
     telnet part for all class
     '''
@@ -107,18 +148,6 @@ class e7_telnet(_Log):
             print "please check network and wait for 30s to reconnection!!!!"
             sleep(30)
             self.telnet_e7(*args, **kwargs)
-        return self.Tel
-
-    def telnet_e7(self, tn, _host, _port, _type=None):
-        '''
-        Telent to _host and return the session
-        '''
-        if tn is None:
-            self.Tel = Telnet(_host, _port)
-            # self.Tel.debuglevel(0)
-            self._lg(self.Tel.read_until(": " or "# " or "~ ", 10))
-        else:
-            pass
         return self.Tel
 
 
@@ -171,17 +200,81 @@ class _Command(object):
         self.session.write(command + self.enter)
         return self.session.read_until(prompt)
 
+class _Matlibplt(object):
+    '''
+    matlib running
+    '''
+    def __init__(self):
+        self.plt = None
+
+    def static_plt(self, x, y, memory_filter, card_ip):
+        '''
+        画图参考： https://www.cnblogs.com/zhizhan/p/5615947.html
+        颜色参考： https://www.cnblogs.com/darkknightzh/p/6117528.html
+        plt.legend with loc value as following:
+        right, center left, upper right, lower right, best, center
+        lower left, center right, upper left, upper center, lower center
+        '''
+        self.plt = plt
+        print "CPU: {}".format(x)
+        print "MEMORY: {}".format(y)
+        self.cpu_co = ''
+        self.mem_co = ''
+        if memory_filter == self.module_a:
+            self.cpu_co = '-r'
+            self.mem_co = '-g'
+        elif memory_filter == self.module_b:
+            self.cpu_co = '-m'
+            self.mem_co = '-b'
+        self.plt.plot(x, self.cpu_co, label='%s CPU'%memory_filter)
+        self.plt.plot(y, self.mem_co, label='%s MEMORY'%memory_filter)
+
+        self.plt.legend(loc= 'center right')
+        self.plt.xlabel('time')
+        self.plt.ylabel('CPU&MEMORY')
+        self.plt.title('%s cpu&memory'%(card_ip))
+        return self.plt
+
+    # @staticmethod
+    def dynamic_plt(self, x, y, memory_filter, card_ip):
+        import numpy as np
+        self.plt = plt
+        '''
+        Reference:   C:\Python27\Doc\basic_lib\matlib_basic\dynamic_matlib.py
+        '''
+        fig, ax = self.plt.subplots()
+        # fig2, ax2= self.plt.subplots()
+        y1 = []
+        y2 = []
+        for i,j in zip(x, y):
+            y1.append(i)
+            y2.append(j)
+            self.plt.cla()
+            self.plt.title('%s cpu&memory'%(card_ip))
+            self.plt.xlabel("Time")
+            self.plt.ylabel("CPU&MEMORY")
+            self.plt.xlim(0, len(x))
+            self.plt.ylim(0, 50)
+            self.plt.grid()
+            self.plt.plot(y1, label='%s CPU'%memory_filter)
+            self.plt.plot(y2, label='%s MEMORY'%memory_filter)
+            self.plt.legend(loc='upper right')
+            # self.plt.draw()
+            self.plt.pause(0.001)
+        return self.plt
+
 class _Mongogo(object):
     '''
     mongo database running
     '''
     def __init__(self):
-        pass
+        self.plt = plt
 
     # @staticmethod
     def mongo_write(self, memory_dict=None, action=None, memory_filter=None, card_ip=None):
         import pymongo
         '''
+        python 也有小型数据库比如：SQLITE3，只是生成一个文件（C语言）.
         http://www.runoob.com/python3/python-mongodb.html   MONGDB操作方法网址
         '''
         self._x = []
@@ -191,6 +284,8 @@ class _Mongogo(object):
         myclient = pymongo.MongoClient("mongodb://localhost:27017/")
         user = myclient["maojun"]
         dbname = user["sean"]
+        print "memory_dict: {}".format(memory_dict)
+        print "memory_filter: {}".format(memory_filter)
 
         if action == 'add' and memory_filter == None:
             dbname.insert_one(memory_dict)
@@ -205,11 +300,11 @@ class _Mongogo(object):
                         self._y.append(value)
 
             if self.plt_st == 'static':
-                plt = self.static_plt(self._x, self._y, memory_filter, card_ip)
-                return plt
+                pl = self.static_plt(self._x, self._y, memory_filter, card_ip)
+                return pl
             if self.plt_st == 'dynamic':
-                plt = self.dynamic_plt(self._x, self._y, memory_filter, card_ip)
-                return plt
+                pl = self.dynamic_plt(self._x, self._y, memory_filter, card_ip)
+                return pl
 
         elif action == None and memory_filter != None:
             myquery = {"module_name": "%s"%memory_filter}
@@ -218,68 +313,6 @@ class _Mongogo(object):
         else:
             return None
 
-class _Matlibplt(object):
-    '''
-    matlib running
-    '''
-    def __init__(self):
-        pass
-
-    def static_plt(self, x, y, memory_filter, card_ip):
-        '''
-        画图参考： https://www.cnblogs.com/zhizhan/p/5615947.html
-        颜色参考： https://www.cnblogs.com/darkknightzh/p/6117528.html
-        plt.legend with loc value as following:
-        right, center left, upper right, lower right, best, center
-        lower left, center right, upper left, upper center, lower center
-        '''
-        import matplotlib.pyplot as plt
-        print "CPU: {}".format(x)
-        print "MEMORY: {}".format(y)
-        self.cpu_co = ''
-        self.mem_co = ''
-        if memory_filter == self.module_a:
-            self.cpu_co = '-r'
-            self.mem_co = '-g'
-        elif memory_filter == self.module_b:
-            self.cpu_co = '-m'
-            self.mem_co = '-b'
-        plt.plot(x, self.cpu_co, label='%s CPU'%memory_filter)
-        plt.plot(y, self.mem_co, label='%s MEMORY'%memory_filter)
-
-        plt.legend(loc= 'center right')
-        plt.xlabel('time')
-        plt.ylabel('CPU&MEMORY')
-        plt.title('%s cpu&memory'%(card_ip))
-        return plt
-
-    @staticmethod
-    def dynamic_plt(x, y, memory_filter, card_ip):
-        import matplotlib.pyplot as plt
-        import numpy as np
-        '''
-        Reference:   C:\Python27\Doc\basic_lib\matlib_basic\dynamic_matlib.py
-        '''
-        fig, ax = plt.subplots()
-        # fig2, ax2=plt.subplots()
-        y1 = []
-        y2 = []
-        for i,j in zip(x, y):
-            y1.append(i)
-            y2.append(j)
-            plt.cla()
-            plt.title('%s cpu&memory'%(card_ip))
-            plt.xlabel("Time")
-            plt.ylabel("CPU&MEMORY")
-            plt.xlim(0, len(x))
-            plt.ylim(0, 50)
-            plt.grid()
-            plt.plot(y1, label='%s CPU'%memory_filter)
-            plt.plot(y2, label='%s MEMORY'%memory_filter)
-            plt.legend(loc='upper right')
-            # plt.draw()
-            plt.pause(0.001)
-        return plt
 
 class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
     def __init__(self, _host, _port, _type):
@@ -304,7 +337,11 @@ class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
         Give a prompt for user when system running start.
         '''
         logging.warn('AXOS card CPU&MEMORY is checking in process, please waiting...................')
-        return object.__new__(cls)   #__init__will not running if no return
+        if not hasattr(cls, '_instance'):
+            # cls._instance = super(Singleton, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(_Cli, cls).__new__(cls, *args, **kwargs)
+        return cls._instance            #__init__will not running if no return
+        # return object.__new__(cls)
 
     def __del__(self):
         '''
@@ -314,7 +351,6 @@ class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
         try:
             self.session.close()
             return self._lg("telnet session closed!")
-            # print "session closed"
         except BaseException, e:
             print e.message
 
@@ -339,6 +375,16 @@ class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
         self.step_command('get %s'%baseline_version, "> ")
         self.step_command('bye', "# ")
 
+    def mongo_add(self, memory_content, module_name):
+        print "module_name: \033[0;31m%s\033[0m" % module_name.group(1)
+        print "module_CPU: \033[0;31m%s\033[0m" % memory_content.group(1)
+        print "module_Memory: \033[0;31m%s\033[0m" % memory_content.group(2)
+        self.memory_dict['module_name'] = module_name.group(1)
+        self.memory_dict['CUP'] = memory_content.group(1)
+        self.memory_dict['Memory'] = memory_content.group(2)
+        self.memory_dict['_id'] = self.id_number
+        self.mongo_write(self.memory_dict, 'add')
+
     @slv_log(name='maojun')
     def memory_check_run(self, module_a, module_b, card_ip):
         '''
@@ -351,6 +397,7 @@ class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
         self.memory_update = {}
         self.id_number = int
         self.plt = None
+        self.warn_value = 1
         import random
         self.cli_command('cd /var/log/mem_check')
         # self.cli_command('cat lmd.log')
@@ -365,29 +412,28 @@ class _Cli(e7_telnet, Para, _Log, _Login, _Command, _Mongogo, _Matlibplt):
             self.id_number = random.randint(1, 1000000000000000)
             memory_content = memory_re.match(line_memory)
             if memory_content:
-                if memory_content.group(1) != '0.0' and float(memory_content.group(2)) >= 5:
+                if memory_content.group(1) >= '0.0' and float(memory_content.group(2)) >= self.warn_value:
                     module_name = module_re.search(line_memory)
-                    if module_name:
-                        print "module_name: \033[0;31m%s\033[0m"%module_name.group(1)
-                        self.memory_dict['module_name'] = module_name.group(1)
+                    print "module: {}".format(module_name.group(1))
+                    print "re content: {}".format(memory_content.group())
+                    if module_name.group(1) == self.module_a:
+                        self.mongo_add(memory_content, module_name)
+                    elif module_name.group(1) == self.module_b:
+                        self.mongo_add(memory_content, module_name)
                     else:
                         print "module name not matched"
-                    print "CPU: \033[0;31m%s\033[0m" % memory_content.group(1)
-                    print "Memory: \033[0;31m%s\033[0m" % memory_content.group(2)
-                    self.memory_dict['CUP'] = memory_content.group(1)
-                    self.memory_dict['Memory'] = memory_content.group(2)
-                    self.memory_dict['_id'] = self.id_number
-                    self.mongo_write(self.memory_dict, 'add')
+
                 else:
                     continue
             else:
                 continue
 
-        print "memory_dict: {}".format(self.memory_dict)
+        # print "memory_dict: {}".format(self.memory_dict)
         import threading
-        module_lib = [module_a, module_b]
+        print "self.module_a, self.module_b: {}, {}".format(self.module_a, self.module_b)
+        module_lib = [self.module_a, self.module_b]
         for module_run in module_lib:
-            self.plt = self.mongo_write(None, 'print', module_run, card_ip)
+            pl = self.mongo_write(None, 'print', module_run, card_ip)
         self.plt.show()
         # print self.cli_command('par -a leak -0 ')
         # print self.cli_command('par -a mem -0 ')
@@ -425,9 +471,12 @@ if __name__ == "__main__":
     if hasattr(_Cli, 'enter') is False:
         getattr(_Cli, 'enter', setattr(_Cli, 'enter', '\n'))
         # sleep(600)
-    card_ip = '10.245.46.215'
-    module_a = 'lmd'
-    module_b = 'halm'
+    card_ip = '10.245.46.208'
+    module = ['lmd', 'halm_', 'igmpd']
+    module_a = module[0]
+    module_b = module[2]
     b = _Cli(card_ip, 23, 'AXOS')
     print "_cli 属性有哪些：{}".format(b.__dict__)
     b.cli_lines(module_a, module_b, card_ip)
+
+

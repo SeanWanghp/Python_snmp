@@ -25,6 +25,14 @@ C:\Program Files\MongoDB\Server\3.2\bin>mongod --dbpath c:\data\db
 
 C:\Program Files\MongoDB\Server\3.2\bin\mongo.exe
 
+use maojun (show dbs)
+db.sean.find() (show tables)
+db.sean.find({'module_name':'igmpd'})
+db.sean.remove({'module_name':'lmd'})  #can delete spec messages
+db.sean.remove({ "_id" : NumberLong("982195719875613")})
+db.sean.remove({ "_id" : NumberLong("760954100344915")})
+db.sean.remove({ "_id" : NumberLong("203975929740535")})
+
 mkdir c:\data\db
 mkdir c:\data\log
 
@@ -55,6 +63,8 @@ use runoobdb
 db.sites.find()
 db.sites.find('_id', 1)
 db.sites.drop()
+
+
 
 show tables
 runoobtable
