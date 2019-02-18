@@ -1,4 +1,4 @@
-C:\Python27\Lib\site-packages\robotide\__init__.py 用来启动RIDE
+﻿C:\Python27\Lib\site-packages\robotide\__init__.py 用来启动RIDE
 C:\Python27\Lib\site-packages\robotide\application.py 用来启动FRAME
 C:\Python27\Lib\site-packages\robotide\mainframe.py 是GUI主要部件功能
 C:\Python27\Lib\site-packages\robotide\ui\tree.py 左边框文件目录结构
@@ -11,3 +11,22 @@ C:\Python27\Lib\site-packages\SeleniumLibrary\keywords\browsermanagement.py   #G
 
 C:\Python27\Lib\site-packages\robot\api\deco.py		#keywords\browsermanagement method
 
+
+
+
+
+
+RIDE INSTALL:
+https://blog.csdn.net/ywyxb/article/details/64126927
+
+http://robotframework.org/robotframework/latest/libraries/BuiltIn.html	#ROBOT libs
+https://robotframework.org/#libraries
+
+pip install --upgrade robotframework-ride
+pip install robotframework-ride==1.7.3
+
+pip install robotframework-selenium2library
+
+
+首先由于使用的python版本是3.6.5，官网上支持的一般都是python2.7，所以3.6需要到这个地址下载RIDE的gz包，网址：https://github.com/HelioGuilherme66/RIDE/archive/python3.zip
+下载完成后解压到本地，cmd进入到解压出来的路径，执行命令：python setup.py install
