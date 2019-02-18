@@ -85,7 +85,7 @@ hostname:localhost.localdomain localhost.localdomain
 primary DNS:192.168.33.10
 secondary DNS:172.23.41.10
 
-DNS searchpath:calix.local
+DNS searchpath: caxxx.local
 
 
 /etc/rc.local     -->add start program

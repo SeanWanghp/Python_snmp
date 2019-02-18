@@ -1,6 +1,5 @@
 ####################http://www.runoob.com/mongodb/mongodb-window-install.html
 
-
 C:\Program Files\MongoDB\Server\3.2\bin
 
 https://www.mongodb.com/download-center#community		#download 3.2 VERSION, above 3.4 only support win8+
@@ -8,20 +7,13 @@ https://www.mongodb.com/download-center#community		#download 3.2 VERSION, above 
 install complete then go as following:
 
 c:\>cd c:\
-
 c:\>mkdir data
-
 c:\>cd data
-
 c:\data>mkdir db
-
 c:\data>cd db
-
 c:\data\db>
 
-
 C:\Program Files\MongoDB\Server\3.2\bin>mongod --dbpath c:\data\db
-
 
 C:\Program Files\MongoDB\Server\3.2\bin\mongo.exe
 

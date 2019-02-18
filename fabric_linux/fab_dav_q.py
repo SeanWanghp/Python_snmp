@@ -83,7 +83,7 @@ def smx_server():
             run('ls -a')
             # sudo('cp /mnt/version/install-activate-PMA-B3L6-69 /opt/', pty=False)
             # run('sudo cp /mnt/version/%s /opt/'%baseline, shell= False)        #this need remove 'sudo -i' with password
-            # sudo('cp /mnt/version/install-activate-PMA-BML-284.bin /opt/', user='calix')
+            # sudo('cp /mnt/version/install-activate-PMA-BML-284.bin /opt/', user='cccccaaaaaalix')
         # run('sudo -i')  #switch user to root and manual run command
         with cd('/opt'):
             run('ls -a')
@@ -155,10 +155,10 @@ def dotask():
 #     """
 #     Run test suites
 #     """
-#     run("export PYTHONPATH=/home/xizhang/PycharmProjects/cafe/calix/src/ && "
-#         "/opt/ActivePython-2.7/bin/python -m caferobot.cafebot --config_file /home/xizhang/PycharmProjects/cafe/calix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin/config.ini "
+#     run("export PYTHONPATH=/home/maojun/PycharmProjects/cafe/cccccaaaaalix/src/ && "
+#         "/opt/ActivePython-2.7/bin/python -m caferobot.cafebot --config_file /home/maojun/PycharmProjects/cafe/cccccaaaaaalix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin/config.ini "
 #         "--cafe_result_path /tmp/aaa$$ "
-#         "/home/xizhang/PycharmProjects/cafe/calix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin")
+#         "/home/maojun/PycharmProjects/cafe/cccccaaaaaalix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin")
 #
 #
 # def print_hostname():
