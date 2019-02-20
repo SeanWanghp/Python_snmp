@@ -27,6 +27,8 @@ pip install robotframework-ride==1.7.3
 
 pip install robotframework-selenium2library
 
+pip install robotframework-appiumlibrary
+
 
 首先由于使用的python版本是3.6.5，官网上支持的一般都是python2.7，所以3.6需要到这个地址下载RIDE的gz包，网址：https://github.com/HelioGuilherme66/RIDE/archive/python3.zip
 下载完成后解压到本地，cmd进入到解压出来的路径，执行命令：python setup.py install

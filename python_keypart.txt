@@ -47,3 +47,25 @@ s2=Singleton(2)
 print id(s1)
 print id(s2)
 
+SOCKET 基本方法：
+###SEVER
+import socket
+ip_port = ('127.0.0.1', 9999)
+sk = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+sk.bind(ip_port)
+
+while True:
+    data = sk.recv(1024)
+    print 'get data from client: {}'.format(data)
+	
+
+###client
+ip_port = ('127.0.0.1', 9999)
+
+sk = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
+while True:
+    inp = raw_input('data: ').strip()
+    if inp == 'exit':
+        break
+    sk.sendto(inp, ip_port)
+
