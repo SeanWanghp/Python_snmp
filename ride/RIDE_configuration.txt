@@ -11,3 +11,6 @@ C:\Python27\Lib\site-packages\SeleniumLibrary\keywords\browsermanagement.py   #G
 
 C:\Python27\Lib\site-packages\robot\api\deco.py		#keywords\browsermanagement method
 
+
+#######################private LIB path:
+C:\Python27\Lib\site-packages\NewLibrary\ride_keyword.py
