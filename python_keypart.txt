@@ -1,6 +1,6 @@
 python:
 ####https://www.cnblogs.com/cjm123/articles/9048611.html NEWZELAND
-#Singapo work website:     https://www.make-it-in-germany.com/en/jobs/looking-for-a-job/
+#Singapore work website:     https://www.make-it-in-germany.com/en/jobs/looking-for-a-job/
 
 
 ×°ÊÎÆ÷£º@log

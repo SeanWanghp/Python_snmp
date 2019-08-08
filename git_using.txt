@@ -13,3 +13,7 @@ git push
 C:\Python27\Doc\AXOS\milan>python smx_unittest.py   生成HTML
 
 C:\Python27\Doc\basic_lib\fabric_basic>fab -f fab_dav_q.py dotask	FABRIC执行多服务器操作
+
+#opencv using in auto_car_driving
+
+#https://www.geeksforgeeks.org/car-driving-using-hand-detection-in-python/
