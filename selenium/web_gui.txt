@@ -1,3 +1,6 @@
+chrome driver download page:  http://chromedriver.storage.googleapis.com/index.html
+
+
 £®1£©WEB“≥√Ê≤‚ ‘£∫
 https://pypi.python.org/pypi/robotframework
 https://pypi.python.org/pypi/selenium#downloads                   °°  #“¿¿µ∞¸

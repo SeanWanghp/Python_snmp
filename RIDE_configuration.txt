@@ -14,8 +14,6 @@ C:\Python27\Lib\site-packages\robot\api\deco.py		#keywords\browsermanagement met
 
 
 
-
-
 RIDE INSTALL:
 https://blog.csdn.net/ywyxb/article/details/64126927
 
@@ -32,3 +30,54 @@ pip install robotframework-appiumlibrary
 
 首先由于使用的python版本是3.6.5，官网上支持的一般都是python2.7，所以3.6需要到这个地址下载RIDE的gz包，网址：https://github.com/HelioGuilherme66/RIDE/archive/python3.zip
 下载完成后解压到本地，cmd进入到解压出来的路径，执行命令：python setup.py install
+
+
+CAFE telnetlib path: /home/sewang/Calix_E7/repo/calix/src/cafe/sessions/telnet.py
+
+
+
+
+一、Python3环境部署
+1.下载最新版本的python3.7，可根据自己电脑的位数下载，如：我的64位的win10,下载对应的64位python3.7版本python3.7.0下载
+（Python各版本下载网址：https://www.python.org/ftp/python）
+
+
+2.安装开始，你可以选择自定义安装，选中自动添加path的环境变量选项，方便安装成功后不用再去配置环境变量，具体安装方法请自行搜索
+python3必须配置的环境变量
+二、rebot framework及相关包安装
+#1.在线安装robotframwork,在cmd命令下输入:pip install robotframework
+
+#2.在线安装wxpython,在cmd命令下输入:pip install wxpython
+
+#3.在线安装pygments,在cmd命令下输入:pip install pygments（这是一个代码高亮的库，运行ride需要）
+
+#4.在线安装pywin32库，安装ride需要，在cmd命令下输入:pip install pywin32
+
+#5.安装selenium库,关键字驱动用例时使用,在cmd命令下输入:pip install --upgrade robotframework-seleniumlibrary
+
+#6.（pyCrypto需要在安装sshlibrary库前安装：pip install pyCrypto）然后安装sshlibrary库,在cmd命令下输入:pip install robotframework-sshlibrary
+
+#7.安装databaselibrary库,在cmd命令下输入:pip install robotframework-databaselibrary
+
+#8.安装requests库,在cmd命令下输入:pip install robotframework-requests
+
+#9.安装appiumlibrary库,在cmd命令下输入:pip install robotframework-appiumlibrary
+
+#10. pip install robotframework-ride
+pip install --upgrade robotframework-ride
+
+
+chrome can not run with option in robotframework and add it in the lib:(C:\Python37\Lib\site-packages\SeleniumLibrary\keywords\webdrivertools.py
+import os
+print(os.getcwd())
+print('seanwang changed code at:%s'%(str(os.path.dirname(__file__))))
+options = webdriver.ChromeOptions()
+options.add_argument("--no-sandbox")
+
+
+
+
+
+
+
+
