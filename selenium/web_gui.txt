@@ -1,5 +1,12 @@
 chrome driver download page:  http://chromedriver.storage.googleapis.com/index.html
 
+chrome and firefox with selenium version:
+https://blog.csdn.net/WF466764515/article/details/72675476
+
+Firefox VERSION:
+
+http://ftp.mozilla.org/pub/firefox/releases/
+
 
 £®1£©WEB“≥√Ê≤‚ ‘£∫
 https://pypi.python.org/pypi/robotframework
