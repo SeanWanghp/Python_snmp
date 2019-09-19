@@ -65,7 +65,7 @@ sk.fileno()
 
 
 import socket, subprocess, multiprocessing
-from basic_lib.SNMP_basic_lib.pysnmp_lib_main import _run_walk
+from basic_lib.SNMP_basic_lib.pysnmp_pool import _run_walk
 from time import sleep
 
 
@@ -110,7 +110,7 @@ class socket_process(object):
     def _snmp_run(self, times):
         '''C:\\Python27\\Doc\\basic_lib\\SNMP_basic_lib\\pysnmp_lib_main.py'''
         for i in range(1, 2):
-            ip = '10.245.46.227'
+            ip = '10.245.46.207'
             port = '161'
             msg = ['10.245.46.208', ip]
             tel_port = [port, port]
@@ -119,31 +119,31 @@ class socket_process(object):
                 多进程调用会比较快,但是同时会过多的占用CPU,有利有弊
                 换线程调用,CPU利用率会低,但同时运行速度也会变慢,在数量少的情况下还是用进程比较好
                 '''
-                print '**************snmp run the {} times****************'.format(str(wait))
+                print('**************snmp run the {} times****************'.format(str(wait)))
                 pool = multiprocessing.Pool(processes=len(msg))
                 for (ip, port) in zip(msg, tel_port):
                     pool.apply_async(_run_walk, args=(ip, port))    #thread running on E7,,,also can using: pool.apply()
                 pool.close()
                 pool.join()
                 sleep(30)
-            print "*****************************SNMP walking done*****************************"
+            print("*****************************SNMP walking done*****************************")
 
     def _run_cmd(self):
         cmd = "cmd.exe"
-        begin = 100
-        end = 101
+        begin = 1
+        end = 3
         while begin < end:
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                                  stdin=subprocess.PIPE,
                                  stderr=subprocess.PIPE)
-            p.stdin.write("ping 192.168.37." + str(begin) + "\n")
+            p.stdin.write(b"ping 192.168.37." + str(begin).encode('ascii') + b"\n")
             p.stdin.close()
             p.wait()
             begin = begin + 1
-            print begin
-            print "execution result: %s" % p.stdout.read()
+            print(begin)
+            print("execution result: %s" % p.stdout.read().decode('utf-8'))
         else:
-            print '**********************The while loop is over.******************************'
+            print('**********************The while loop is over.******************************')
 
 
 class socket_cla(socket_process):
@@ -183,23 +183,22 @@ class socket_cla(socket_process):
         '''checkout the DNS of the web'''
         host = "www.163.com"
         DNS_IP = socket.getaddrinfo(host, None)
-        print "DNS IP is: ", DNS_IP[0][4][0]
+        print("DNS IP is: ", DNS_IP[0][4][0])
 
     def socket_run(self):
         while True:
             data = self.sk.recvfrom(9999)   #recv() will showing up mismatch
-            print 'sk.getpeername(): {}'.format(self.sk.getsockname())
+            print('sk.getpeername(): {}'.format(self.sk.getsockname()))
             for dd in str(data).split(','):
-                print 'get data from client: {}\r'.format(dd)
-                for msg in dd.split('\t'):
-                    print "msg: ", msg.encode(encoding="utf-8").decode(encoding="utf-8")
-                    print '\r'
+                # print('get data from udp client: {}\r'.format(dd))
+                for msg in dd.split('\n'):
+                    print("msg: ", msg.encode(encoding="utf-8").decode(encoding="utf-8"))
                     if 'ping' in msg:
-                        print 'enter ping'
+                        print('enter ping')
                         self.cmd_run()
                     elif 'snmp' in msg:
-                        print 'enter snmp'
-                        self.run_snmp('200')
+                        print('enter snmp')
+                        self.run_snmp('2')
                 ff = open('udp_packet_cap.txt', 'a+')
                 ff.write(str(dd) + '\n')
 

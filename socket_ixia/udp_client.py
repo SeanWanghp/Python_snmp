@@ -6,7 +6,7 @@ __author__='Sean Wang'
 #print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
 #SOCKET    https://www.cnblogs.com/aylin/p/5572104.html
 
-import sys, socket
+import sys, socket, logging
 ####SOCKET CLIENT as following
 hostname = socket.gethostname()
 print ("Host name: %s" % hostname)
@@ -17,9 +17,14 @@ print("IP Address: %s" % ip_addr1)
 ip_port = (ip_addr1, 8080)
 sk = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
 while True:
-    inp = raw_input('data(ping, snmp): ').strip()
+    inp = input('data(ping, snmp): ').strip()
     '''inp effect value: ping, snmp'''
     if inp == 'exit':
         break
-    sk.sendto(inp, ip_port)
+    if inp == 'snmp':
+        sk.sendto(inp.encode('ascii'), ip_port)
+        print('snmp running in udp server, please check it by manual')
+    elif inp == 'ping':
+        sk.sendto(inp.encode('ascii'), ip_port)
+        logging.warning('ping running in udp server, please check it by manual')
     # print 'sk.getpeername(): {}'.format(sk.getpeername())
