@@ -4,24 +4,24 @@
 import socket
 #得到本地ip
 localIP = socket.gethostbyname(socket.gethostname())
-print"local ip:%s "%localIP
+print("local ip:%s "%localIP)
 
 ipList = socket.gethostbyname_ex(socket.gethostname())
 for i in ipList:
     if i != localIP:
-       print"external IP:%s"%i
+       print("external IP:%s"%i)
 
 
 import struct
 ip = '192.168.1.1'
 num_ip=socket.ntohl(struct.unpack("I", socket.inet_aton(str(ip)))[0])
-print num_ip
+print(num_ip)
 ip = socket.inet_ntoa(struct.pack('I', socket.htonl(num_ip)))
-print ip
+print(ip)
 
 
 import ipaddress
-print "ipv4address:", ipaddress.IPv4Address("0000")
+print("ipv4address:", ipaddress.IPv4Address("0000"))
 
 def valid_ip(address):
     try:
@@ -30,9 +30,9 @@ def valid_ip(address):
     except:
         return False
 
-print valid_ip('0.0.0.1')
-print valid_ip('225.10.20.30')
-print valid_ip('gibberish')
+print(valid_ip('0.0.0.1'))
+print(valid_ip('225.10.20.30'))
+print(valid_ip('gibberish'))
 
 
 import yaml
@@ -45,9 +45,9 @@ for data, value in dict.items():
     for data_1, value_1 in value.items():
         # print data, data_1, value_1
         for data_2, value_2 in value_1.items():
-            print data, data_1, data_2, value_2
-print dict["E7"]['n1']['host'], dict["E7"]['n1']['port']
-print dict["E7"]['n1']['username'], dict["E7"]['n1']['password']
+            print(data, data_1, data_2, value_2)
+print(dict["E7"]['n1']['host'], dict["E7"]['n1']['port'])
+print(dict["E7"]['n1']['username'], dict["E7"]['n1']['password'])
 stream.close()
 
 
@@ -55,7 +55,7 @@ class telnet_parameters(object):
     '''
     property method: set and get value, set value can be using for check value
     '''
-    def __init__(self, port = 23, timeout = 100):
+    def __init__(self, port=23, timeout=100):
         self.__port     = port
         self.__timeout  = timeout
         self.__host     = '127.0.0.1'
@@ -79,4 +79,4 @@ class telnet_parameters(object):
 
 telnet_pa = telnet_parameters(None, None)
 telnet_pa.host = '10.245.47.231'
-print "telnet_pa.host:", telnet_pa.host
+print("telnet_pa.host:", telnet_pa.host)

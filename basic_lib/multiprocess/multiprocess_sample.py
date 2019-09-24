@@ -33,9 +33,9 @@ class Producer(multiprocessing.Process):
         for i in range(5):
             item = random.randint(0,256)
             self.queue.put(item)
-            print "process producer: item %d appended to queue %s"%(item, self.name)
+            print("process producer: item %d appended to queue %s"%(item, self.name))
             # time.sleep(1)
-            print "the size of queue is %s"% self.queue.qsize()
+            print("the size of queue is %s"% self.queue.qsize())
 
 
 class Consumer(multiprocessing.Process):
@@ -46,13 +46,13 @@ class Consumer(multiprocessing.Process):
     def run(self):
         try:
             if self.queue.empty():
-                print "the queue is empty"
+                print("the queue is empty")
             else:
                 item = self.queue.get(block=True, timeout=2)
-                print 'process consumer: item %d popped from by %s \n'%(item, self.name)
+                print('process consumer: item %d popped from by %s \n'%(item, self.name))
                 # time.sleep(1)
         except e:
-            print e
+            print(e)
 
 
 class Apple(Consumer):
@@ -63,8 +63,8 @@ class Apple(Consumer):
     def run(self):
         for i in range(self.times):
             item = random.randint(0, 256)
-            print "process apple: item %d appended to queue %s"%(item, self.name)
-            print "the size of queue is %s"% i
+            print("process apple: item %d appended to queue %s"%(item, self.name))
+            print("the size of queue is %s"% i)
 
 
 if __name__ == "__main__":

@@ -33,7 +33,9 @@ pip install robotframework-appiumlibrary
 
 
 CAFE telnetlib path: /home/sewang/Calix_E7/repo/calix/src/cafe/sessions/telnet.py
-
+RIDE WXPYTHON lib path:  
+C:\Python37\Lib\site-packages\robotide\application\application.py
+C:\Python37\Lib\site-packages\robotide\lib\robot\__init__.py
 
 
 
