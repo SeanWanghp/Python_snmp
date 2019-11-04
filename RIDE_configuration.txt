@@ -33,6 +33,18 @@ pip install robotframework-appiumlibrary
 
 
 CAFE telnetlib path: /home/sewang/Calix_E7/repo/calix/src/cafe/sessions/telnet.py
+CAFE SESSION summary lib: /home/sewang/Calix_E7/repo/calix/src/cafe/sessions/session_srv.py
+CAFE SNMP LIB:  /etc/barista/packages/cafe/sessions/snmp.py
+/etc/barista/packages/cafe/app/app.py
+/etc/barista/packages/cafe/sessions/ssh.py
+/etc/barista/packages/cafe/sessions/base/shell.py
+/etc/barista/packages/cafe/core/config.py
+/etc/barista/packages/cafe/app/driver/stc.py
+/etc/barista/packages/cafe/sessions/tcl_remote.py	#TCL connection als using SSH paramiko
+
+
+
+
 RIDE WXPYTHON lib path:  
 C:\Python37\Lib\site-packages\robotide\application\application.py
 C:\Python37\Lib\site-packages\robotide\lib\robot\__init__.py

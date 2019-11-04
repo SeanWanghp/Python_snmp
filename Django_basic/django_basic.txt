@@ -1,0 +1,7 @@
+pip install django
+C:\Python37\Scripts>python c:\Python37\Scripts\django-admin.py startproject DjangoDemo
+
+cd DjangoDemo
+
+python manage.py startapp demoapp
+
