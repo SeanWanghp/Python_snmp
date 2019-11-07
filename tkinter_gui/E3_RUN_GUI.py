@@ -4,12 +4,12 @@ __author__='Sean Wang'
 #data@:2016-10-13
 # coding=utf8
 # coding=gbk
-#print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
+#print(out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
 
-from Tkinter import *
-from tkMessageBox import *
-from tkFileDialog import *
-from tkSimpleDialog import askstring
+from tkinter import *
+# from tkMessageBox import *
+# from tkFileDialog import *
+# from tkSimpleDialog import askstring
 from telnetlib import Telnet
 #from E7.SLV384.deco_slv import addspam, slv_log, locker, deco, log_pa
 import multiprocessing
@@ -31,16 +31,16 @@ from multiprocessing import Process
 # reAXOSCLIPrompt           =  sre.compile('# ',    sre.IGNORECASE)
 
 
-rePrompt                    =  sre.compile('\w+\d+>')
-reTL1Prompt                 =  sre.compile('\w+\d+>|\w+\.>')
-reShellPrompt               =  sre.compile('\w+:\d+\.\d+:>|\w+\d+:\d+\.\d+:>')
-reLinuxPrompt               =  sre.compile('# ')
-reC7Prompt                  =  sre.compile('COMPLD|DENY')    #This is for C7 TL1 specically, TL1 command not need 'COMPLD' instead of self.enter
-reLoginPrompt               =  sre.compile('\w+\s+login:',    sre.IGNORECASE)
-rePasswordPrompt            =  sre.compile('Password:',    sre.IGNORECASE)
-reConfirmPrompt             =  sre.compile('y/N',    sre.IGNORECASE)
-reAXOSConfirmPrompt         =  sre.compile('~# ',    sre.IGNORECASE)
-reAccuteConfirmPrompt         =  sre.compile('E3VCP>',    sre.IGNORECASE)
+rePrompt                    =  sre.compile(b'\w+\d+>')
+reTL1Prompt                 =  sre.compile(b'\w+\d+>|\w+\.>')
+reShellPrompt               =  sre.compile(b'\w+:\d+\.\d+:>|\w+\d+:\d+\.\d+:>')
+reLinuxPrompt               =  sre.compile(b'# ')
+reC7Prompt                  =  sre.compile(b'COMPLD|DENY')    #This is for C7 TL1 specically, TL1 command not need 'COMPLD' instead of self.enter
+reLoginPrompt               =  sre.compile(b'\w+\s+login:',    sre.IGNORECASE)
+rePasswordPrompt            =  sre.compile(b'Password:',    sre.IGNORECASE)
+reConfirmPrompt             =  sre.compile(b'y/N',    sre.IGNORECASE)
+reAXOSConfirmPrompt         =  sre.compile(b'~# ',    sre.IGNORECASE)
+reAccuteConfirmPrompt         =  sre.compile(b'E3VCP>',    sre.IGNORECASE)
 
 filename=''
 connected=None
@@ -61,7 +61,7 @@ class lib_card_E3(object):
         # res = self.Tel.expect(self.promptList, self.timeout)
         Session.write(com + self.enter)
         res = Session.expect(self.promptList, timeout)
-        print "res[2] is:", res[2]
+        print("res[2] is:", res[2])
         textPad.insert(END, '\r\n' + res[2].decode('gbk').encode('utf-8'))
         return None
 
@@ -74,7 +74,7 @@ class lib_card_E3(object):
             card_numbers_a = card_number_re.search(result_card)
             if card_numbers_a:
                 card_numbers += [card_numbers_a.group()]
-        print "card_numbers:", card_numbers
+        print("card_numbers:", card_numbers)
         return card_numbers
 
 '''
@@ -86,7 +86,7 @@ def author():
 def about():
     showinfo('版权信息.Copyright.V1.0', '本软件归属Maojun Wang，哈哈！')
 
-import tkMessageBox
+# import tkMessageBox
 def E3_help():
     """show help info"""
     tkMessageBox.showinfo("help",
@@ -173,7 +173,7 @@ def onFind():
     if target:
       where = textPad.search(target, INSERT, END)
       if where:
-        print where
+        print(where)
         pastit = where + ('+%dc' % len(target))
         #text.tag_remove(SEL, '1.0', END)
         textPad.tag_add(SEL, where, pastit)
@@ -190,56 +190,56 @@ class Example():
         self.promptList = [rePrompt, reTL1Prompt, reShellPrompt, reLinuxPrompt, reLoginPrompt, rePasswordPrompt,
                            reConfirmPrompt, reC7Prompt, reAXOSConfirmPrompt, reAccuteConfirmPrompt]
         self.timeout = 15
-        self.enter='\r'
-
+        self.enter = b'\n'
+        self.Tel = None
     # def __call__(self, E7, x):  ##__call__ will be using by func(func, *args), E(E, *args)   ##This will cause multi process running then show error
-    #     print getattr(E7, '__init__', '__init__ Telnet not find')
+    #     print(getattr(E7, '__init__', '__init__ Telnet not find')
     #     if hasattr(E7, '__init__'):
-    #         print "E7 has __init__ function"
+    #         print("E7 has __init__ function"
     #         setattr(E7, 'timeout', 100)
-    #     print E7.timeout
+    #     print(E7.timeout
     #     return "%s running with __call__" % x
 
     def session(self, host):
-        print "telnet host is: ", host
+        print("telnet host is: ", host)
         try:
             self.Tel = Telnet(host, '23', self.timeout)
             self.Tel.set_debuglevel(0)
-            connected = True
-            return connected
-        except Exception, ex:
-            Tel_error=re.compile('((\*Errno)|(\*timed out))')
-            if Tel_error.search(str(ex)):
-                print '*' * 100 + '\n' + str(ex) + '\n' + '*' * 100
+            self.connected = True
+            return self.connected
+        except Exception:
+            Tel_error = re.compile('((\*Errno)|(\*timed out))')
+            if Tel_error.search('Err'):
+                print('*' * 100 + '\n' + str(ex) + '\n' + '*' * 100)
             connected=False
         return "Telnet successfully!!!" + '\n\r' * 2
 
     def cli_command(self, *args):
-        log = ''
-        self.Tel.write(args[0] + self.enter)
+        print('args:', args[0].encode('ascii'))
+        self.Tel.write(args[0].encode('ascii') + self.enter)
         res =self.Tel.expect(self.promptList, self.timeout)
         # logging.warning(self.enter + res[2])
         # textPad.insert(END,  '\r\n' + res[2])
-        # print res[2]
+        # print(res[2]
         return res[2]
 
     def cli_command_run(self, *args):
-        log = ''
-        self.Tel.write(args[0] + self.enter)
+        print('args:', args[0].encode('ascii'))
+        self.Tel.write(args[0].encode('ascii') + self.enter)
         res =self.Tel.expect(self.promptList, self.timeout)
         # logging.warning(self.enter + res[2])
-        textPad.insert(END,  '\r\n' + res[2])
-        # print res[2]
+        textPad.insert(END,  self.enter + res[2])
+        # print(res[2]
         return res[2]
 
     def version(self):
         ip = content_ip.get()
-        print "Lb1.curselection() value: ", Lb1.curselection()
+        print("Lb1.curselection() value: ", Lb1.curselection())
         if ip == '' and Lb1.curselection() == ():
             tkMessageBox.showwarning("Warning", "Please enter IP or selected IP")
             if Lb1.curselection() != ():
                 ip = Lb1.get(Lb1.curselection())
-                print ip
+                print(ip)
             else:
                 pass
         elif content_ip.get() or Lb1.get(Lb1.curselection()):
@@ -248,7 +248,7 @@ class Example():
             else:
                 ip = Lb1.get(Lb1.curselection())
             self.session(ip)
-            steps = '''e3admin
+            steps = '''e3support
                                 admin
                                 set se pa di ti di'''
             for step in steps.split('\n'):
@@ -257,10 +257,10 @@ class Example():
             version = sre.compile("\d+.\d+.\d+.\d+")
             version_match = version.search(version_content)
             version_split = version_content.split("\r\n")
-            print version_split
-            print "Running version: ", version_split[1].split(":")[1]
-            print "Committed version: ", version_split[2].split(":")[1]
-            print "Alternate version: ", version_split[3].split(":")[1]
+            print(version_split)
+            print("Running version: ", version_split[1].split(":")[1])
+            print("Committed version: ", version_split[2].split(":")[1])
+            print("Alternate version: ", version_split[3].split(":")[1])
             for res in version_match.group():
                 # E3.insert(END, res)
                 pass
@@ -274,28 +274,30 @@ class Example():
         msg_cli = content_cli.get().encode('gbk')
         msg_ver = content_ver.get().encode('gbk')
         if msg_cli or msg_ver:
-            print msg_cli, msg_ver
+            print(msg_cli, msg_ver)
             res=self.cli_command(msg_cli)
             textPad.insert(END, res[2] + '\r\n' + '*' * 100)  # END will showing up from up to down
         return None
 
     def manual_msg_axos(self):
         textPad.delete(1.0, END)
-        msg_cli_axos = content_cli_axos.get().encode('gbk')
-        msg_ver_axos = content_ver_axos.get().encode('gbk')
+        msg_cli_axos = content_cli_axos.get()
+        msg_ver_axos = content_ver_axos.get()
+        self.res =''
         if msg_cli_axos or msg_ver_axos:
-            print msg_cli_axos, msg_ver_axos
+            print(msg_cli_axos, msg_ver_axos)
             for msg in msg_cli_axos.split('/'):
                 if CheckVar11.get() == 1:
                     loop = 5
                 else:
                     loop = 1
                 for i in range(loop):
-                    print "CheckVar11:", CheckVar11.get(), "i value:", i
+                    print("CheckVar11:", CheckVar11.get(), "i value:", i)
                     # msg=content_cli.get().encode('gbk')
-                    res = self.cli_command_run(msg)
-
-                textPad.insert(END, res[2] + '\r\n' + '*' * 100)  # END will showing up from up to down
+                    self.res = self.cli_command_run(msg)
+                textPad.insert(END, str(self.res[2]))
+                textPad.insert(END, self.enter)
+                textPad.insert(END, '*' * 100)  # END will showing up from up to down
         return None
 
     def tel_e3(self):
@@ -303,8 +305,8 @@ class Example():
         # ip  = '10.245.46.10'
         if ip:
             self.session(ip)
-            print "-------------log into E3 !!!!--------------------"
-            steps='''e3admin
+            print("-------------log into E3 !!!!--------------------")
+            steps='''e3support
                                 admin
                                 set se pa di ti di
                                 debug
@@ -321,7 +323,7 @@ class Example():
             #             show run slot'''
             for step in steps.split('\n'):
                 self.cli_command(step.strip())
-            print "--------------login successfully-----------------"
+            print("--------------login successfully-----------------")
             self.manual_msg()
         return None
 
@@ -330,8 +332,8 @@ class Example():
         ip = '10.245.46.205'
         if ip:
             self.session(ip)
-            print "-------------log into e7 !!!!--------------------"
-            steps='''e7admin
+            print("-------------log into e7 !!!!--------------------")
+            steps='''e7support
                                 admin
                                 set se pa di ti di
                                 show card
@@ -340,7 +342,7 @@ class Example():
                                 show dhcp lease'''
             for step in steps.split('\n'):
                 self.cli_command(step.strip())
-            print "--------------login successfully-----------------"
+            print("--------------login successfully-----------------")
             msg=content_cli.get().encode('gbk')
             self.manual_msg()
         return None
@@ -351,7 +353,7 @@ class Example():
         # ip = '10.245.47.10'
         if ip:
             self.session(ip)
-            print "-------------log into AXOS 35B !!!!--------------------"
+            print("-------------log into AXOS 35B !!!!--------------------")
             steps='''#this is axos system, welcome in!
                                 root
                                 root
@@ -361,6 +363,7 @@ class Example():
                                 paginate false
                                 show run slot 1/1'''
             for step in steps.split('\n'):
+                print(step.strip())
                 self.cli_command(step.strip())
             textPad.insert(END, "--------------login successfully-----------------" + '\r\n')
         else:
@@ -369,12 +372,12 @@ class Example():
 
     def tel_e7_TPS(self):
         ip = content_ip.get()
-        print "Lb1.curselection() value: ",Lb1.curselection(), CheckVar1.get()
+        print("Lb1.curselection() value: ",Lb1.curselection(), CheckVar1.get())
         if ip == '' and Lb1.curselection() == ():
             tkMessageBox.showwarning("Warning", "Please enter IP or selected IP")
             if Lb1.curselection() != ():
                 ip = Lb1.get(Lb1.curselection())
-                print ip
+                print(ip)
             else: pass
         elif content_ip.get() or Lb1.get(Lb1.curselection()):
             if content_ip.get():
@@ -382,8 +385,8 @@ class Example():
             else:
                 ip = Lb1.get(Lb1.curselection())
             self.session(ip)
-            print "-------------log into e7_TPS !!!!--------------------"
-            steps='''e7admin
+            print("-------------log into e7_TPS !!!!--------------------")
+            steps='''e7support
                                 admin
                                 set se pa di ti di
                                 set session event-notif disabled
@@ -391,7 +394,7 @@ class Example():
                                 show card'''
             for step in steps.split('\n'):
                 self.cli_command(step.strip())
-            print "--------------login successfully-----------------"
+            print("--------------login successfully-----------------")
             msg = content_cli.get().encode('gbk')
             self.manual_msg()
             return None
@@ -410,18 +413,18 @@ class Example():
         upgrade_version = content_ver.get().encode('gbk')
         if upgrade_version == "":
             upgrade_version = self.version()
-            steps = '''e3admin
+            steps = '''e3support
                                 admin
                                 commit system version %s''' % upgrade_version
         else:
-            steps = '''e3admin
+            steps = '''e3support
                                 admin
                                 set se pa di ti di
                                 set session event-notif disabled
                                 set session alarm-notif disabled
                                 upgrade system server 10.245.46.202 user sean directory-path \ version %s reset
                                 sean'''% upgrade_version
-        print "Telnet ip is: ", ip
+        print("Telnet ip is: ", ip)
         try:
             Session = telnetlib.Telnet(ip, port=23)
             Session.set_debuglevel(0)
@@ -431,10 +434,10 @@ class Example():
             Session.close()
             self.manual_msg()
 
-        except Exception, ex:
+        except Exception:
             tel_error = sre.compile(r"((error)|(time))")
-            if tel_error.search(str(ex)):
-                print '*' * 100 + '\r\n' + ex + '\r\n' + '*' * 100
+            if tel_error.search('Err'):
+                print('*' * 100 + '\r\n' + 'Err' + '\r\n' + '*' * 100)
         return "thread running successfully"
 
     def upgrade(self):
@@ -450,7 +453,7 @@ class Example():
             #     pool.apply_async(E3_run, args=(ip, card, vector[1], times))  # thread running two E7 process
             # pool.close()
             # pool.join()
-            print "Sub-process(es) done."
+            print("Sub-process(es) done.")
 
     def today_news(self):
         import requests
@@ -478,10 +481,11 @@ class Example():
         return None
 # from axos_tel import Example
 E7=Example()
-# print E7(E7, E7.__doc__)
+# print(E7(E7, E7.__doc__)
 
 ####################TK script as following#############################
-root=Tk()
+import tkinter as tk
+root=tk.Tk()
 root.title('本软件归属Maojun，哈哈！')
 root.geometry("850x800+100+100")
 #root.geometry('1100x350+500+300')
@@ -525,7 +529,7 @@ aboutmenu.add_command(label='版权', command=about)
 aboutmenu.add_command(label='Help', command=E3_help)
 menubar.add_cascade(label='关于', menu=aboutmenu)
 
-from ttk import *
+from tkinter.ttk import *
 #Left button running
 note = Notebook(root)
 toolbar = Frame(note , height=25,)
@@ -610,8 +614,8 @@ shortButton_6.bind("aaaa")
 
 
 #   AXOS PAGE
-shortButton_31=Button(toolbar_2, text='TEL_AXOS',width = E3_button_wid,command=E7.tel_axos).pack(side=LEFT, padx=5, pady=5)
-shortButton_32=Button(toolbar_2, text='RUN_command',width = E3_button_wid,command=E7.manual_msg_axos).pack(side=LEFT, padx=5, pady=5)
+shortButton_31=Button(toolbar_2, text='TEL_AXOS',width = E3_button_wid, command=E7.tel_axos).pack(side=LEFT, padx=5, pady=5)
+shortButton_32=Button(toolbar_2, text='RUN_command',width = E3_button_wid, command=E7.manual_msg_axos).pack(side=LEFT, padx=5, pady=5)
 shortButton_32=Button(toolbar_2, text='今日新闻',width = E3_button_wid,command=E7.today_news).pack(side=LEFT, padx=5, pady=5)
 
 
@@ -622,7 +626,7 @@ scrollbar=Scrollbar(toolbar)
 scrollbar.pack( side=RIGHT, fill=Y )
 def printList(event):
     if Lb1.curselection():
-        print "Listbox value:", Lb1.get(Lb1.curselection())
+        print("Listbox value:", Lb1.get(Lb1.curselection()))
 Lb1=Listbox(toolbar, yscrollcommand=scrollbar.set, selectmode=MULTIPLE, height=1, width=15)
 E3_E7_IPs = ['10.245.46.205', '10.245.47.231', '10.245.46.10', '10.245.59.210', '10.245.59.215']
 for ip_item in E3_E7_IPs:
@@ -679,7 +683,7 @@ C1=Checkbutton(toolbar_1, text="59.210", variable=CheckVar1, onvalue=1, offvalue
 C2=Checkbutton(toolbar_1, text="46.205", variable=CheckVar2, onvalue=1, offvalue=0, command=E7.tel_e7).pack(side=LEFT, padx=5, pady=5)
 C3=Checkbutton(toolbar_1, text="46.10", variable=CheckVar3, onvalue=1, offvalue=0, command=E7.tel_e3).pack(side=LEFT, padx=5, pady=5)
 
-print "c1,c2,c3:", CheckVar1.get(), C2, C3
+print("c1,c2,c3:", CheckVar1.get(), C2, C3)
 
 
 #   AXOS PAGE
@@ -688,7 +692,7 @@ Entrybar_IP = Frame(toolbar_2, height=25)
 Entrybar_IP.pack(expand=YES, fill=X)
 L11 = Label(Entrybar_IP, text="IP").pack(side=LEFT, padx=5, pady=5)
 content_ip_axos = StringVar()
-content_ip_axos.set('10.245.47.10')
+content_ip_axos.set('10.245.46.208')
 E11 = Entry(Entrybar_IP, textvariable=content_ip_axos).pack(side=LEFT, padx=5, pady=5)
 
 #Input CLI command value

@@ -3,7 +3,7 @@
 __author__='Sean Wang'
 #data@:2018-11-14
 #print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
-from basic_lib.decorator.log import Log
+from basic_lib.dec_log.log import Log
 import paramiko, sys
 sys.path.append('...')
 '''
@@ -20,6 +20,27 @@ def log(text):
     return decorator
 
 
+@log('ssh in process')
+def _login(self):
+    '''cafe code good sample'''
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.load_system_host_keys()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(self.host, self.port, username=self.user, password=self.password,
+                    timeout=self.connect_timeout)
+        # time.sleep(2.0)
+
+        self._session = ssh
+        self.logger.info("ssh session login complete (sid=%s,host=%s)" % (self.sid, self.host))
+    except Exception:
+        raise SSHLoginException("sid=%s, host=%s" % (self.sid, self.host))
+
+    finally:
+        pass
+
+
+@log('ssh in process')
 def sshclient_execmd(hostname, port, username, password, execmd):
     paramiko.util.log_to_file("paramiko.log")
     ssh = paramiko.SSHClient()
@@ -27,9 +48,9 @@ def sshclient_execmd(hostname, port, username, password, execmd):
 
     ssh.connect(hostname=hostname, port=port, username=username, password=password)
     for command in execmd.splitlines():
-        stdin, stdout, stderr = ssh.exec_command(command)
+        stdin, stdout, stderr = ssh.exec_command(command.encode('ascii'))
         # stdin.write("Y")  # Generally speaking, the first connection, need a simple interaction.
-        print stdout.read()
+        print(stdout.read().decode(encoding='utf-8'))
 
     ssh.close()
 
@@ -41,7 +62,7 @@ def with_open(filename):
             for command in line.split(','):
                 command.strip()
                 comm += command
-        print 'command: ', comm
+        print('command: ', comm)
     return comm
 
 
@@ -50,7 +71,7 @@ def main():
     hostname = '10.245.46.208'
     port = 22
     username = 'sysadmin'
-    password = 'sysadmin'
+    password = 'seanwang'
     filename = 'cmd.txt'
     execmd = with_open(filename)
     sshclient_execmd(hostname, port, username, password, execmd)

@@ -1,7 +1,5 @@
-# coding=utf-8                                                                  #this must be in first line
-#C:\Python27\Doc python
-__author__='Maojun'
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import os
 from fabric.api import *
 from fabric.context_managers import *
@@ -15,57 +13,30 @@ from fabric.colors import *
 """
 Created on 04/08/2018
 
-fabfile全局属性设定
-env对象的作用是定义fabfile的全局设定，各属性说明如下：
-
-属性	含义
-env.host	定义目标主机,以python的列表表示，如env.host=['xx.xx.xx.xx','xx.xx.xx.xx']
-env.exclude_hosts	排除指定主机，以python的列表表示
-env.port	定义目标主机端口，默认为22
-env.user	定义用户名
-env.password	定义密码
-env.passwords	与password功能一样，区别在于不同主机配置不同密码的应用情景,配置此项的时候需要配置用户、主机、端口等信息，
-				如：env.passwords = {'root@xx.xx.xx.xx:22': '123', 'root@xx.xx.xx.xx':'234'}
-env.getway	定义网关
-env.deploy_release_dir	自定义全局变量
-env.roledefs	定义角色分组
-
-常用的API
-Fabric支持常用的方法及说明如下：
-
-方法	说明
-local	执行本地命令，如:local('hostname')
-lcd	切换本地目录,lcd('/root')
-cd	切换远程目录,cd('cd')
-run	执行远程命令，如：run('hostname')
-sudo	sudo执行远程命令，如：sudo('echo “123456″	passwd --stdin root')
-put	上传本地文件到远程主机,如：put(src,des)
-get	从远程主机下载文件到本地，如：get(des,src)
-prompt	获取用户输入信息，如：prompt（‘please enter a new password:’）
-confirm	获取提示信息确认，如：confirm('failed.Continue[Y/n]?')
-reboot	重启远程主机，reboot()
-@task	函数修饰符，标识的函数为fab可调用的
-@runs_once	函数修饰符，表示的函数只会执行一次
-
-作者：爱吃土豆的程序猿
-链接：https://www.jianshu.com/p/14c89ae13364
+现在遇到错误时，控制台会打出一个警告信息，然后继续执行后续任务。那我们怎么捕获错误并处理呢？像”run()”, “local()”, 
+“sudo()”, “get()”, “put()”等SSH功能函数都有返回值。当返回值的”succeeded”属性为True时，说明执行成功，反之就是失败。
+你也可以检查返回值的”failed”属性，为True时就表示执行失败，有错误发生。
 
 """
 
 dhcp = 'root@10.245.59.200:22' # 这里root ip 和 端口22一个都不能少哦
-smx = 'user@10.245.247.60:22'
+smx = 'calix@10.245.247.60:22'
+smx_2 = 'calix@10.245.247.6:22'
 cafe = 'sewang@10.245.243.11:22'
 
 
-env.passwords = {dhcp:'rootgod',
-                 smx:'xxxx123',
+env.passwords = {dhcp: 'rootgod',
+                 smx: 'Calix123',
+                 smx_2: 'Calix123',
                  cafe: 'password77'}
 
-env.roledefs = {'dhcp':[dhcp],
-                'smx':[smx],
+env.roledefs = {'dhcp': [dhcp],
+                'smx': [smx],
+                'smx_2': [smx_2],
                 'cafe': [cafe]}
 
 env.parallel = False
+env.warn_only = True
 env.source_dir="/opt/"
 # env.dest_dir="/opt/machtalk/"
 env.sudo_prefix = 'sudo'
@@ -83,7 +54,7 @@ def smx_server():
             run('ls -a')
             # sudo('cp /mnt/version/install-activate-PMA-B3L6-69 /opt/', pty=False)
             # run('sudo cp /mnt/version/%s /opt/'%baseline, shell= False)        #this need remove 'sudo -i' with password
-            # sudo('cp /mnt/version/install-activate-PMA-BML-284.bin /opt/', user='cccccaaaaaalix')
+            # sudo('cp /mnt/version/install-activate-PMA-BML-284.bin /opt/', user='calix')
         # run('sudo -i')  #switch user to root and manual run command
         with cd('/opt'):
             run('ls -a')
@@ -101,21 +72,52 @@ def dhcp_server():
     with cd('/root'):
         with cd('Desktop'):
             run('ls')
-            print green("****print local files")
+            print(green("****print(local files"))
+            upload = put('diango_run.bat', '/root/Desktop')
+            if upload.failed:
+                print("fail")
+                sudo('rm diango_run.bat')
+                put('diango_run.bat', '/root/Desktop', use_sudo=True)
+            elif upload.succeeded:
+                print("upload succeeded")
+            download = get('/root/Desktop/diango_run.bat', None)
+            if download.failed:
+                print('failed')
+            elif upload.succeeded:
+                print("download succeeded")
+
             # python_log = run('python 1.py')
-    with cd('/home/sean'):
+    with cd('/home/sean'), prefix('ls'):
+        for i in range(0, 2):
+            run('pwd')
+    with prefix("cd /home"):
         run('pwd')
+        local('pwd')
 
-
+# @parallel
 @roles('cafe')
 def cafe_vm():
     run('ls')
 
+@roles('smx_2')
+def smx_server_2():
+    run('ssh root@10.245.46.216')
+    if prompt('password:'):
+        run('root')
+    # if confirm("password:"):
+        # run("root")
+    # run('yes')
+    # run('root')
+    run('ps aux --sort -rss')
+
 @task
 def dotask():
-    execute(smx_server)
-    execute(dhcp_server)
-    execute(cafe_vm)
+    '''C:\GitHub\python_lib\basic_lib\fabric_basic>fab -H localhost -f fab_dav_q.py dotask
+    fab -f fab_dav_q.py dotask'''
+    # execute(smx_server)
+    # execute(dhcp_server)
+    # execute(cafe_vm)
+    execute(smx_server_2)
 
 
 
@@ -155,10 +157,10 @@ def dotask():
 #     """
 #     Run test suites
 #     """
-#     run("export PYTHONPATH=/home/maojun/PycharmProjects/cafe/cccccaaaaalix/src/ && "
-#         "/opt/ActivePython-2.7/bin/python -m caferobot.cafebot --config_file /home/maojun/PycharmProjects/cafe/cccccaaaaaalix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin/config.ini "
+#     run("export PYTHONPATH=/home/xizhang/PycharmProjects/cafe/calix/src/ && "
+#         "/opt/ActivePython-2.7/bin/python -m caferobot.cafebot --config_file /home/xizhang/PycharmProjects/cafe/calix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin/config.ini "
 #         "--cafe_result_path /tmp/aaa$$ "
-#         "/home/maojun/PycharmProjects/cafe/cccccaaaaaalix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin")
+#         "/home/xizhang/PycharmProjects/cafe/calix/src/perftest/cafecommander/distributed_runner/data/test_suite/robot_builtin")
 #
 #
 # def print_hostname():
