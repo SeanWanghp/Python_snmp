@@ -1,8 +1,15 @@
 
+# -*- coding:utf-8 -*-
+# C:\Python37\
+__author__ = 'Sean Wang'
+#data@:2019-10-22
+#update data@:2019-xx-xx                  #spell inspection cancelled
 # from time import sleep
 # time = __import__('time')
 # time.sleep(5)
 from telnet_ping.telnet_lib import *
+import wx, eyed3, glob
+import logging
 
 
 class LazyImport:
@@ -20,7 +27,28 @@ class LazyImport:
 tim = LazyImport("time")
 
 
+class Person(object):
+    '''using for check parameter value, illegal etc.'''
+    def __init__(self, age):
+        # self.name = name
+        self._age = age
+        pass
+
+    @property
+    def age(self):
+        return self._age
+
+    @age.setter
+    def age(self, value):
+        if 20 < value < 100:
+            self._age = value
+        else:
+            self._age = 23
+            logging.warning('port should be 23 in telnet session, invalid age value input!!!')
+
+
 class E7Telnet(Tellib):
+    '''init telnetlib'''
     def __init__(self, host, port):
         super(E7Telnet, self).__init__(host, port)
         print("self:", self)
@@ -34,37 +62,46 @@ class E7Telnet(Tellib):
 
 
 class Cli(E7Telnet, TelBasic):
+    '''main process for telnet and run cli command'''
     def __init__(self, host, port, type, username, password):
-        super(Cli, self).__init__(host, port)
-
-        self.enter = b'\r\n'
+        # self.enter = b'\r\n'
         self.res = b''
         self.host = host
-        self.port = port
+        # self.port = port
         self.type = type
         self.username = username
         self.password = password
+        xm = Person(13)     #init property
+        xm.age = port    #init property and using age.setter
+        self.port = xm.age
+        print('age:',  self.port)
         self.session = self.telnet_e7(self.host, self.port, self.type)
+        super(Cli, self).__init__(self.host, self.port)
         pass
+
+    def __new__(cls, *args, **kwargs):
+        '''
+        Give a prompt for user when system running start.
+        '''
+        logging.warning('AXOS card telnet is checking in process, please waiting...................')
+        return object.__new__(cls)   #__init__will not running if no return
 
     def __call__(self):
         print('telnet is in process')
 
     def login(self):
         if self.type is 'AXOS':
-            self.session.write(self.username + self.enter)
-            self.res += self.session.read_until(b": ")
-            self.session.write(self.password + self.enter)
-            self.res += self.session.read_until(b"# ")
-            self.session.write(b"" + self.enter)
-            self.res += self.session.read_until(b"# ")
+            cli = [self.username, self.password, b"cli"]
+            prompt = [b": ", b"# ", b"# "]
+            for cl, pro in zip(cli, prompt):
+                self.session.write(cl + self.enter)
+                self.res += self.session.read_until(pro)
         if self.type is 'EXA':
-            self.session.write(self.username + self.enter)
-            self.res += self.session.read_until(b": ")
-            self.session.write(self.password + self.enter)
-            self.res += self.session.read_until(b"> ")
-            self.session.write(b"" + self.enter)
-            self.res += self.session.read_until(b"> ")
+            cli = [self.username, self.password, b""]
+            prompt = [b": ", b"> ", b"> "]
+            for cl, pro in zip(cli, prompt):
+                self.session.write(cl + self.enter)
+                self.res += self.session.read_until(pro)
 
     def cli_command(self, command=None):
         for cli in command.split(b'\n'):
@@ -75,19 +112,20 @@ class Cli(E7Telnet, TelBasic):
                     print(cli_print.decode(encoding='utf-8'))
                 tim.sleep(5)
             else:
-                print ("ignore one command")
+                print("ignore one command")
         return self.res
 
     @must_connected
     def run_command(self, cli):
         cli_result = self.cli_command(cli)
-        return cli_result     #for decorator
+        return cli_result     #for dec_log
 
-    def cli_lines(self):
+    def cli_lines(self, image= None):
         '''cli_lines using for run cli command'''
         cli = b'''paginate false
-                        show inter sum
-                        show run inter ethernet'''
+                        show card
+                        show igmp multicast summary
+                        #upgrade activate filename %s'''%image
         return self.run_command(cli)
 
     def _is_some_method(obj):
@@ -108,7 +146,25 @@ class Cli(E7Telnet, TelBasic):
         print(inspect.getdoc(self.cli_lines))
 
 
-if __name__ == '__main__':
-    b = Cli('10.245.46.208', 23, 'AXOS', username=b'sysadmin', password=b'seanwang')
-    b.cli_lines()
+def run_pro(ip):
+    if hasattr(Cli, 'enter') is False:
+        getattr(Cli, 'enter', setattr(Cli, 'enter', b'\n'))
+        logging.warning('self.enter value init here')
+    b = Cli(ip, 13, 'AXOS', username=b'root', password=b'root')
+    image = b'http://bamboo.calix.local/artifact/IBAXOS194-CI/shared/build-453/FullRelease.run/FullRelease_system-E7-2_IB-AXOS-19.4_20190924160120_builder.run'
+    b.cli_lines(image)
     b.function_judge()
+
+
+if __name__ == '__main__':
+# def run():
+    ####################################will occupa CPU almost 100%########################
+    from multiprocessing import Pool
+    ip_pool = ['10.245.46.208', '10.245.46.223', '10.245.46.216', '10.245.46.207']
+    p = Pool(processes=len(ip_pool))
+    for (ip, times) in zip(ip_pool, range(len(ip_pool))):
+        p.apply_async(run_pro, args=(ip,))      #this will running at same time
+        # p.apply_async(run_pro(ip,))       #this will cause running step by step
+    p.close()
+    p.join()
+    print("milan" * 100)

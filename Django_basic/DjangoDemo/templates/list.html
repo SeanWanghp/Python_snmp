@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8">
+		<title>Maojun website</title>
+		<style type="text/css">  
+			body { color: #edf; background: #453; padding: 0 5em; margin:0 }  
+			h1 { padding: 2em lem; background:#675 }  
+			h2 { color: #bf8; border-top: 1px dotted #fff; margin-top: 2em }  
+			p { margin: lem 0 }  
+		</style>
+	</head>
+	<body>
+		<h1><center>Maojun EQPT address list</center></h1>
+			<h2>Address List</h2>
+				<table border="1">
+					<tr><th>name</th><th>address</th><th>type</th><th>username</th><th>password</th></tr>
+					{% for user in address %}
+						<tr>
+							<td>{{user.name}}</td>
+							<td>{{user.address}}</td>
+							<td>{{user.type}}</td>
+							<td>{{user.username}}</td>
+							<td>{{user.password}}</td>
+						</tr>
+						{% endfor %}
+				</table>
+
+				<p><a href="/csv/address/">download to local with csv file</a></p>
+				
+				<li><a href="http://www.cnblogs.com/lhb25/p/10-html5-css3-drop-down-menus.html" target="_blank">HTML / CSS</a></li>
+				<li><a href="/e7.html">E7</li>
+				<li><a href="http://localhost:8000/home">Home</li>
+		
+	</body>
+</html>

@@ -1,0 +1,14 @@
+b"<190>Nov  7 15:09:13 GPON-8R2 notfmgrd[5009]: [1][1][A][5009] [23] nm_handle_events.c.410: Id:105
+ Syslog-Severity:6
+ Perceived-Severity:INFO
+ Name:tacacs-server-unreachable
+ Category:SECURITY Cause:A Configured tacacs+ server becomes unreachable
+ Details:This event is generated when a configured tacacs+ server is unreachable
+ Xpath:/config/system/aaa/tacacs/server[host='10.245.251.3'] Address:NULL
+ Primary-element:NULL
+ Value:NULL
+ Verb:NULL
+ Session:0
+ Login:NULL
+ IpAddress:NULL
+ SrcManager:NULL\n"

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <meta charset="utf-8" />
+    <script type="text/javascript">
+        //这个 请选择 选项 加的很好。
+        var jiaArr = ["请选择","儒家", "佛家", "道家"];
+        var exampleArr = [
+                ["请选择"],
+                ["孔子", "论语", "三字经"],
+                ["释迦牟尼", "金刚经", "楞严经"],
+                ["老子", "庄子", "北斗经"]
+        ];
+        window.onload = function () {
+             
+            var selJia = document.getElementById("jia");
+            //申请空间
+            selJia.length = jiaArr.length;
+            //添加元素
+            for (var i = 0; i < jiaArr.length; i++) {
+                selJia.options[i].text = jiaArr[i];
+                selJia.options[i].value = jiaArr[i];
+            }
+        }
+ 
+        function ChangeExampleSelect(index)
+        {
+            var selExa = document.getElementById("example");
+ 
+            selExa.length = exampleArr[index].length;
+ 
+            for (var i = 0; i < exampleArr[index].length; i++)
+            {
+                selExa.options[i].text = exampleArr[index][i];
+                selExa.options[i].value = exampleArr[index][i];
+            }
+        }
+    </script>
+</head>
+<body>
+    <select id="jia" onchange="ChangeExampleSelect(this.selectedIndex)">
+ 
+    </select>
+    <select id="example">
+ 
+    </select>
+</body>
+</html>

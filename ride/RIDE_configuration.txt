@@ -20,5 +20,5 @@ C:\Python27\Lib\site-packages\NewLibrary\ride_keyword.py
 arguments: -l F:\robot_log\log -r F:\robot_report\report
 
 #######will delete the temp log in the path/ bat
-cd /d C:\Users\sewang.CALIX\AppData\Local\Temp
+cd /d C:\Users\sewang.CAXXX\AppData\Local\Temp
 for /f %%i in ('dir /ad /b RIDE*') do (rd /s /q %%i)

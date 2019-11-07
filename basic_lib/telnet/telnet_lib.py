@@ -1,11 +1,28 @@
 
-
+# -*- coding:utf-8 -*-
+# C:\Python37\
+__author__ = 'Sean Wang'
+#data@:2019-10-22
+#update data@:2019-xx-xx                  #spell inspection cancelled
 from abc import ABCMeta, abstractmethod
 from contextlib import contextmanager
 import telnetlib
 from time import sleep
 from functools import wraps
 from try_lib.logging_lib.log import Log
+import telnet_ping
+
+
+class Singleton:
+    __instance = None
+
+    def __init__(self):
+        print("我是init方法.")
+
+    def __new__(cls):
+        if not Singleton.__instance:
+            Singleton.__instance = object.__new__(cls)
+        return Singleton.__instance
 
 
 def must_connected(func):
@@ -28,7 +45,8 @@ def log(text):
 
 class Tellib(telnetlib.Telnet):
     def __init__(self, host, port):
-        telnetlib.Telnet.__init__(self, host, port if port else 23)
+        # telnetlib.Telnet.__init__(self, host, port)
+        super(Tellib, self).__init__(host, port)
         self.Tel = None
         pass
 
@@ -36,7 +54,7 @@ class Tellib(telnetlib.Telnet):
 class TelBasic(object):
     __metaclass__ = ABCMeta
 
-    def __init(self):
+    def __init__(self):
         pass
 
     @abstractmethod
@@ -46,6 +64,42 @@ class TelBasic(object):
     @abstractmethod
     def cli_command(self):
         print("run in subclass")
+
+
+'''following code from CAFE'''
+class ConfigError(Exception): pass
+
+
+class Telconfig():
+    def __init__(self):
+        self.telyml = {}
+        pass
+
+    @property
+    def config(self):
+        # telnet_ping.Iniset()
+        print('ymlhost: ', telnet_ping.get_tel_config().ymlhost)
+        return telnet_ping.get_tel_config()
+
+    @config.setter
+    def config(self, value):
+        if isinstance(value, list):
+            telnet_ping.get_tel_config().ymlhost = value
+        else:
+            ConfigError("error:list is must")
+
+    def check_config_ini(self, inifile):
+        self.config.load_ini(ini_file=inifile)      #can using 'self.config' when property set up parameter
+
+
+class Checkconfig(Telconfig):
+
+    def __init__(self):
+        super(Checkconfig, self).__init__()
+        print(self.check_config_ini('mysql.ini'))
+
+
+print('check_config: ', Checkconfig())
 
 
 class Fileopen(object):
@@ -61,3 +115,10 @@ class Fileopen(object):
         finally:
             print("Closing file")
             f_obj.close()
+
+
+if __name__ == "__main__":
+    with Fileopen().file_open("contextmanager.txt") as fobj:
+        fobj.write("Testing context managers")
+        for i in range(1, 3):
+            print(i)

@@ -14,7 +14,7 @@ sysinfo = socket.gethostbyname_ex(hostname)
 ip_addr = sysinfo[2]
 ip_addr1 = ip_addr[0]
 print("IP Address: %s" % ip_addr1)
-ip_port = (ip_addr1, 8080)
+ip_port = (ip_addr1, 8888)
 sk = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
 while True:
     inp = input('data(ping, snmp): ').strip()

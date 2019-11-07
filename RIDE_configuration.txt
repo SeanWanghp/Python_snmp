@@ -32,8 +32,8 @@ pip install robotframework-appiumlibrary
 下载完成后解压到本地，cmd进入到解压出来的路径，执行命令：python setup.py install
 
 
-CAFE telnetlib path: /home/sewang/Calix_E7/repo/calix/src/cafe/sessions/telnet.py
-CAFE SESSION summary lib: /home/sewang/Calix_E7/repo/calix/src/cafe/sessions/session_srv.py
+CAFE telnetlib path: /home/sewang/Caxxx_E7/repo/caxxx/src/cafe/sessions/telnet.py
+CAFE SESSION summary lib: /home/sewang/Caxxx_E7/repo/caxxx/src/cafe/sessions/session_srv.py
 CAFE SNMP LIB:  /etc/barista/packages/cafe/sessions/snmp.py
 /etc/barista/packages/cafe/app/app.py
 /etc/barista/packages/cafe/sessions/ssh.py

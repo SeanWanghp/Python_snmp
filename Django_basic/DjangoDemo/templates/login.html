@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+	<script type="text/javascript">
+		var myinput  = document.querySelector("#myinput");
+		function  invalidFun(e){
+			var tag = e.target ; // 标签
+			console.info(tag.validity);
+			if( tag.validity.valueMissing ){
+				myinput.setCustomValidity("内容必须要填哦");
+			}else if( tag.validity.patternMismatch ){
+				myinput.setCustomValidity("格式不正确！请输入合法的三位数。");
+			}else{
+				myinput.setCustomValidity("其他错误");
+			}
+		}
+	 
+		// invalid  输入内容错误事件。包括，为空，格式错误等
+		myinput.addEventListener("invalid" ,invalidFun,false);
+	 
+		// 输入的时候没有错误了，就要取消自定义错误提示，否则无法提交表单
+		function  validFun(e){
+			var tag = e.target ; // 标签
+			console.info(tag.validity);
+			myinput.setCustomValidity("");
+		}
+		myinput.addEventListener("input" ,validFun,false);
+	</script>
+
+    <form action="http://127.0.0.1:8000/" id="login_form" method="get">
+        Username:<input type="text" name="admin" placeholder="Username" pattern="[A-z]{5}" required id="myinput"/><br />
+        Password: <input type="password" name="password" placeholder="Password" pattern="[A-z]{5}"/><br />
+        <input type="submit" value="login"/>
+    </form>
+</body>
+</html>

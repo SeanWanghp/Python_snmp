@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script type="text/javascript">
+            function exec1(command) {
+                var ws = new ActiveXObject("WScript.Shell");
+                ws.Run(command);
+            }
+			function runOnPython() {
+				window.open("tk1.py")
+			}
+        </script>
+    </head>
+
+    <body>
+		<div>Relay 1:
+		  <form action= 'movie.ogv' method="POST">
+			  <input type="submit" value="Toggle" id="toggle1" />
+		  </form>
+        </div>
+		<button type="button" onclick="runOnPython()">RunOnPython</button>
+        <div id="header">
+            <h1>读取python运行的结果</h1>
+        </div>
+
+        <!-- 按键开始执行python程序 -->
+        <div id="program">
+            <input type="button" value="运行 python" onclick="exec1('C:\\Python37\\pythonw.exe C:/GitHub/python_lib/TKINTER/tk1.py')"/>
+        </div>
+
+        <!-- 读取python运行结果 -->
+        <!-- 链接的 target 属性必须引用 iframe 的 name 属性 -->
+        <div id="result">
+            <p><a href="number.txt" target="result">结果</a></p>
+            <iframe name="result" width="100" height="30" scrolling="no" frameborder="3"></iframe>
+        </div>
+		<iframe name="show" id="show" width="800" height="500"/>
+    </body>
+
+</html>

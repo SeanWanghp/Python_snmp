@@ -1,0 +1,9 @@
+{
+    "status": "success",
+    "code": 200,
+    "data": {
+        "username": "bob",
+        "user_level": 6,
+        "nickname": "playboy"
+    }
+}

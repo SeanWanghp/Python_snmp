@@ -1,0 +1,43 @@
+<html>  
+  <style type="text/css">  
+    body { color: #edf; background: #453; padding: 0 5em; margin:0 }  
+    h1 { padding: 2em lem; background:#675 }  
+    h2 { color: #bf8; border-top: 1px dotted #fff; margin-top: 2em }  
+    p { margin: lem 0 }  
+  </style>  
+  <body>  
+    <h1><center>Maojun's PYTHON Blog</center></h1>  
+		{% block content %}  
+		{% endblock %} 
+    
+		<p><a href="#Seed">Go to Seed</a>; <a href="#Register">Go to Register</a></p>
+		<pre>For C7&E7 testing, C7 is 10.245.46.115, E7 is 10.245.46.205</pre>
+		{% load staticfiles %}
+		<p><img src="/image/ad.jpg" alt="ad"></p>
+		<p><a href="http://www.baidu.com/" target="_blank">BAIDU</a> Go to www.baidu.com </p>
+		<p><a href="ftp://10.245.46.202" target="_blank">10.245.46.202</a> Go to FTP2 on LAB PC2</p>
+		<p><a href="http://127.0.0.1:8000" target="_blank">Local website</a> Go to local website</p>
+
+		<h2><a name="Seed">Seed Part</a></h2>
+		<pre><hr>
+		C7 TPS system
+		Go to sub1 HTML page
+		<p><a href="home.html" target="_blank"><img border="0" src="{% static "sub1.png" %}" /></p></a>
+		</pre><hr/>
+
+		<h2><a name="Register">Register Part</a></h2>
+			<form action="home.html">
+				Username:<input type="text" name="user"><br />
+				Password:<input type="password" name="password">
+				<input type="button" value="ENTER"/>
+				<input type="reset" value="RE-ENTER"/>
+			</form>
+				<p>
+					Replase the blank part with special words.
+				</p>
+		<address>
+			Question to <a href="mailto:sean.wang@caxxx.com">Maojun Wang</a>.<br> 
+		</address>
+
+  </body>  
+</html>  

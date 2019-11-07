@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<!--<html>-->
+
+<!--<frameset cols="120,*">-->
+
+<!--<frame name="index" src="navigate.html" />-->
+<!--<frame name="content" src="/home/e7.html" />-->
+
+<!--</frameset>-->
+
+<!--</html>-->
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>load_method</title>
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+            <style>
+                *{margin: 0;padding: 0}
+                html, body{height: 100%}
+                #nav{float: left;width:3%;height:100%;background-color: brown}
+                #con{float: right;width:97%;height:100%;background-color: green}
+            </style>
+        <script>
+            $(document).ready(function(){
+                //页面加载的时候，内容框默认显示 e7.html
+                $('#con').load('./e7.html');
+                //单击 a 链接，加载 /home/e7.html
+                $("#a1").click(function(){
+                    $('#con').load('./e7.html');
+                });
+                //单击 b 链接，加载 ./navigate.html
+                $("#a2").click(function(){
+                    $('#con').load('./navigate.html');
+                });
+            })
+        </script>
+</head>
+    <body>
+        <ul id="nav">
+            <li><a href="e7.html" id="a1">Home</a></li>
+            <li><a href="navigate.html" id="a2">Index</a></li>
+        </ul>
+        <div id="con"></div>
+    </body>
+</html>
+
+
+
+
+
+
+
