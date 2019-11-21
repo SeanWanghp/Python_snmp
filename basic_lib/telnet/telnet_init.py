@@ -1,57 +1,54 @@
 # coding=utf-8
-#C:\Python27\Doc python
-__author__='Sean Wang'
+__author__ = 'Sean Wang'
 #data@:2018-09-20
-#print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
 from telnetlib import Telnet
 import time
 
-class myTelnet(Telnet):  # 让此类继承于标准库中的Telnet
-    """自定义的telnet类
+
+class myTelnet(Telnet):
+    """让此类继承于标准库中的Telnet, 自定义的telnet类
     作用：引用系统标准库telnetlib，在标准库的基础上创建自己熟悉的方法
     """
-    # 构造函数
-    def __init__(self ,HOST=None ,PORT=23 ,TIMEOUT=None ,USER=None ,PD=None ,chk_err=r"((E|e)rror)|((F|f)ailed)"
-                 ,chk_user=None ,chk_password=None ,chk_success=None):
-        if not TIMEOUT :
+    def __init__(self, HOST=None, PORT=23, TIMEOUT=None, USER=None, PD=None, chk_err=r"((E|e)rror)|((F|f)ailed)",
+                 chk_user=None, chk_password=None, chk_success=None):
+        if not TIMEOUT:
             # 如果超时时间没有设置则调用父类构造方法进行初始化
             # super(myTelnet, self).__init__(host=HOST, port=PORT)
-            Telnet.__init__(self ,host=HOST, port=PORT)
+            Telnet.__init__(self, host=HOST, port=PORT)
         else:
             # super(myTelnet, self).__init__(host=HOST, port=PORT,timeout=TIMEOUT)
-            Telnet.__init__(self ,host=HOST, port=PORT ,timeout=TIMEOUT)
+            Telnet.__init__(self, host=HOST, port=PORT, timeout=TIMEOUT)
 
-        print "self:", self.__dict__
-        # 调用父类初始化后，检查相关参数，如果关键参数缺失则直接返回异常,否则直接使用参数自动登录并返回结果
-        # self.sock
-        # USER 			用户名
-        # PD 				密码
-        # chk_user 		输入用户名提示字符串
-        # chk_password 	输入密码提示字符串
-        # chk_success 	登录成功提示字符串
+        print("self:", self.__dict__)
+        """调用父类初始化后，检查相关参数，如果关键参数缺失则直接返回异常,否则直接使用参数自动登录并返回结果
+        self.sock
+        USER 			用户名
+        PD 				密码
+        chk_user 		输入用户名提示字符串
+        chk_password 	输入密码提示字符串
+        chk_success 	登录成功提示字符串
+        """
         if (not self.sock) or (not USER) or (not PD) or (not chk_user) or (not chk_password) or (not chk_success):
-            self. login =False
+            self. login = False
         else:
-            self. login =self.tel_login(USER ,PD ,chk_err ,chk_user ,chk_password ,chk_success)
+            self. login = self.tel_login(USER, PD, chk_err, chk_user, chk_password, chk_success)
             # self.login 是类变量，可以用此参数检查是否已经成功登录
 
-    def tel_login(self ,USER=None ,PD=None ,chk_err=r"((E|e)rror)|((F|f)ailed)" ,chk_user=None ,chk_password=None
-                  ,chk_success=None):
-        '''
-        登录 :由构造函数自动执行 也可直接调用当前方法
+    def tel_login(self, USER=None, PD=None, chk_err=r"((E|e)rror)|((F|f)ailed)",
+                  chk_user=None, chk_password=None, chk_success=None):
+        """登录 :由构造函数自动执行 也可直接调用当前方法
         USER 用户名；PD 密码；chk_err 异常检测关键字符；
         chk_user 输入用户名提示字符串；chk_password 输入密码提示字符串；
         chk_success	登录成功提示字符串
         返回值：登录成功返回True ，否则返回False 赋值给类属性login 以判断是否登录
-        '''
+        """
         if (not USER) or (not PD) or (not chk_user) or (not chk_password) or (not chk_success):
-            return  False  # 如果参数不全则直接返回False
+            return False  # 如果参数不全则直接返回False
         chkList = [chk_err, chk_user, chk_password, chk_success]
         for i in range(len(chkList)):
-            # 从telnet服务端返回的是二进制字符串，此处也得使用同样类型
-            # chkList[i]=bytes(chkList[i],"utf-8")
+            """从telnet服务端返回的是二进制字符串，此处也得使用同样类型
+            chkList[i]=bytes(chkList[i],"utf-8")
+            """
             chkList[i] = bytes(chkList[i])
         # 读取建立连接时返回的数据，查看是否是提示输入用户名
         readBack = self.expect(chkList)
@@ -68,17 +65,16 @@ class myTelnet(Telnet):  # 让此类继承于标准库中的Telnet
         else:
             return False
         readBack = self.expect(chkList)
-        print 'aaaa:', readBack[0]
+        print ('aaaa:', readBack[0])
         if readBack[0] == 3:  # 即提示登录成功
             self.user = USER
             return True
         else:
             return False
 
-    def writeToRead(self, writeLine=None, write_err=r"((E|e)rror)|((F|f)ailed)", write_success=None, chkListStr=[],
-                    reWrite=None, return_bool=True):
-        '''
-        写入一行文本并返回执行结果
+    def writeToRead(self, writeLine=None, write_err=r"((E|e)rror)|((F|f)ailed)", write_success=None,
+                    chkListStr=[], reWrite=None, return_bool=True):
+        """写入一行文本并返回执行结果
         telobj telnet连接对象；
         writeLine 要写入的字符串；
         write_err 执行错误检测字符串；
@@ -86,7 +82,7 @@ class myTelnet(Telnet):  # 让此类继承于标准库中的Telnet
         chkListStr 在返回值中要检测的字符串；检测到这其中的任意一个值时才可能执行重写入过程！
         reWrite 当检测到 chkListStr 中内容时所要重新写入的字符串
         return_bool=True 是否返回内容，如不返回则返回bool值
-        '''
+        """
         if (not writeLine) or (not write_success):
             return False  # 没有要写入的内容 或者是没有检测执行成功的字符串则直接返回
         # writeLine = bytes(writeLine+"\r\n",'utf-8') #将输入字符加上回车符并转成二进制文本
@@ -120,7 +116,7 @@ class myTelnet(Telnet):  # 让此类继承于标准库中的Telnet
 
 if __name__ == '__main__':
     tn = myTelnet(
-        HOST="10.245.46.216",
+        HOST="10.245.46.213",
         USER="sysadmin",
         PD="sysadmin",
         chk_user="NGPON2X4 login: ",
@@ -130,7 +126,7 @@ if __name__ == '__main__':
 
     if tn.login:
         f = open("cli.txt", "wb")
-        f.write(time.strftime("%Y-%m-%d %X") + "\r\n")
+        f.write(bytes(time.strftime("%Y-%m-%d %X")) + b"\r\n")
         line = tn.writeToRead(
             writeLine="show vlan",
             write_success="# ",
@@ -139,6 +135,6 @@ if __name__ == '__main__':
         )
         f.write(line)
         f.close()
-        print 'true'
+        print('true')
     else:
-        print 'no login!'
+        print('no login!')

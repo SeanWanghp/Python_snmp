@@ -1,5 +1,6 @@
 
-import paramiko, traceback
+import paramiko
+import traceback
 from paramiko_expect import SSHClientInteraction
 
 
@@ -10,8 +11,7 @@ def main():
     password = 'root'
     prompt = 'root@GPON-8R2:~# '
     cli_prompt = 'GPON-8R2# '
-
-
+    client = None
     # Use SSH client to login
     try:
         # Create a new SSH client object
@@ -27,8 +27,8 @@ def main():
         # Create a client interaction class which will interact with the host
         interact = SSHClientInteraction(client, timeout=2, display=False)
         interact.expect(prompt)
-        ##Send the command
-        interact.send('pwd')        #only can using for linux mode in py3, py2 can using for CLI
+        """only can using for linux mode in py3, py2 can using for CLI"""
+        interact.send('pwd')
         interact.expect(prompt, timeout=2)
         cmd_output_uname = interact.current_output_clean
         print(cmd_output_uname)
@@ -45,12 +45,12 @@ def main():
 
     except KeyboardInterrupt:
         print('Ctrl+C interruption detected, stopping tail')
-    except Exception:
+    except EOFError:
         traceback.print_exc()
     finally:
         try:
             client.close()
-        except:
+        except EOFError:
             pass
 
 

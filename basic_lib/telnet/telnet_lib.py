@@ -46,7 +46,7 @@ def log(text):
 class Tellib(telnetlib.Telnet):
     def __init__(self, host, port):
         # telnetlib.Telnet.__init__(self, host, port)
-        super(Tellib, self).__init__(host, port)
+        super(Tellib, self).__init__(host, port, timeout=10)
         self.Tel = None
         pass
 
@@ -66,11 +66,11 @@ class TelBasic(object):
         print("run in subclass")
 
 
-'''following code from CAFE'''
 class ConfigError(Exception): pass
+'''following code from CAFE'''
 
 
-class Telconfig():
+class Telconfig:
     def __init__(self):
         self.telyml = {}
         pass
@@ -107,13 +107,17 @@ class Fileopen(object):
     @contextmanager
     def file_open(self, path):
         f_obj = None
+        # with open(path, 'w') as f_obj:
+        #     yield f_obj
+        #     print("close file ......")
+        #     f_obj.close()
         try:
             f_obj = open(path, "w")
             yield f_obj
         except OSError:
             print("We had an error!")
         finally:
-            print("Closing file")
+            print("Closing file.....")
             f_obj.close()
 
 

@@ -1,9 +1,7 @@
-
 # -*- coding:utf-8 -*-
 # C:\Python37\
 __author__ = 'Sean Wang'
 #data@:2019-10-22
-#update data@:2019-xx-xx                  #spell inspection cancelled
 from functools import update_wrapper
 import logging
 from telnet_ping.config_load.ini_load import *
@@ -28,19 +26,16 @@ yml_data = '''
 
 class SingletonClass:
     """Singleton class dec_log
-
     Use dec_log to restricts the instantiation of a class to one object
-
     In Caf, we use it is to declare a global object.
 
     Example:
-        >>> @SingletonClass
-        >>> class Foo(object): pass
-        >>> f1 = Foo()
-        >>> f2 = Foo()
-        >>> f1 is f2
+        @SingletonClass
+        class Foo(object): pass
+        f1 = Foo()
+        f2 = Foo()
+        f1 is f2
         True
-
     """
 
     def __init__(self, klass):
@@ -67,7 +62,6 @@ class SingletonClass:
 
 
 class Param:
-
     def __init__(self):
         self.ini_file = None
         self.yml_file = None
@@ -137,14 +131,12 @@ def get_tel_config():
         Config object.
 
     Examples:
-        >>>import telnet_ping
-        >>>config = telnet.get_tel_config()
-        >>>
-        >>>config.load_xxx(); ##print the config parameters contents
+        import telnet_ping
+        config = telnet.get_tel_config()
+        config.load_xxx(); ##print the config parameters contents
 
     Note:
         Refer to caf.core.utils.Param for detail usage of Config class. Config is a subclasss of caf.core.utils.Param.
-
     """
     return Config()
 

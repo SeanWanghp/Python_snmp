@@ -1,10 +1,7 @@
 # coding=utf-8                                                                  #this must be in first line
-#C:\Python27\Doc python
-__author__='Sean Wang'
+__author__ = 'Sean Wang'
 #data@:2019-02-19
-#update data@:2019-xx-xx
-# coding=gbk                                                                    #spell inspection cancelled
-#print out.decode('gbk').encode('utf-8')   #output have Chinese word and English word
+#update data@:2019-11-21
 import socket
 import subprocess
 import multiprocessing
@@ -70,7 +67,7 @@ sk.fileno()
 '''
 
 
-class socket_process(object):
+class Socketprocess(object):
     def __init__(self):
         pass
 
@@ -149,9 +146,9 @@ class Fileopen(object):
             f_obj.close()
 
 
-class socket_cla(socket_process):
+class Socketcla(Socketprocess):
     def __init__(self):
-        '''SOCKET是(源IP+源PORT+目的IP+目的PORT), socket(ip, port) as telnet(ip, port) are different pipe
+        """SOCKET是(源IP+源PORT+目的IP+目的PORT), socket(ip, port) as telnet(ip, port) are different pipe
         参数一：地址簇
     　　socket.AF_INET IPv4（默认）
     　　socket.AF_INET6 IPv6
@@ -166,8 +163,8 @@ class socket_cla(socket_process):
     　　socket.SOCK_SEQPACKET 可靠的连续数据包服务
         参数三：协议
     　　0　　（默认）与特定的地址家族相关的协议,如果是 0 ，则系统就会根据地址格式和套接类别,自动选择一个合适的协议
-        '''
-        super(socket_cla, self).__init__()
+        """
+        super(Socketcla, self).__init__()
         hostname = socket.gethostname()
         print("Host name: %s" % hostname)
         sysinfo = socket.gethostbyname_ex(hostname)
@@ -175,6 +172,10 @@ class socket_cla(socket_process):
         ip_addr1 = ip_addr[0]
         logging.warning("IP Address: %s" % ip_addr1)
         self.ip_port = (ip_addr1, 8888)
+        self.sk = None
+        self.conn = None
+        self.addr = None
+        self.data = None
 
     def skpk(self):
         self.sk = socket.socket(socket.AF_INET, socket.SOCK_RAW)  # recv RAW packet
@@ -198,10 +199,10 @@ class socket_cla(socket_process):
         self.data = self.sk.recvfrom(4096)  # UDP
 
     def skdns(self):
-        '''checkout the DNS of the web'''
+        """checkout the DNS of the web"""
         host = "www.163.com"
-        DNS_IP = socket.getaddrinfo(host, None)
-        print("DNS IP is: ", DNS_IP[0][4][0])
+        dns_ip = socket.getaddrinfo(host, None)
+        print("DNS IP is: ", dns_ip[0][4][0])
 
     def socket_run(self):
         '''send(), sendall() and recv() for TCP, sendto() and recvfrom() for UDP'''
@@ -228,7 +229,7 @@ class socket_cla(socket_process):
 
 
 if __name__ == "__main__":
-    soc = socket_cla()
+    soc = Socketcla()
     soc.socket_run()
     '''https://www.jianshu.com/p/629961795744 介绍说明'''
 
