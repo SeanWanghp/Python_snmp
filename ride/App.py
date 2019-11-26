@@ -1,6 +1,13 @@
 from MaojunLibrary.MobileAppLibrary import MobileAppLibrary
 from MaojunLibrary.WebAppLibrary import WebAppLibrary
 from MaojunLibrary.SshLibrary import SshLibrary
+from MaojunLibrary.SnmpLibrary import SnmpLibrary
+import sys
+import socket
+import re
+import os
+import copy
+import time
 
 class App(object):
     def __init__(self):
@@ -17,6 +24,62 @@ class App(object):
         [Tags] @author = Sean W
         '''
         return MobileAppLibrary().click_element(locator)
+
+
+class App_Snmp(object):
+    def __init__(self):
+        pass
+
+    def App_snmp_connection(self, ip, port, community, version):
+        self.snmp = SnmpLibrary(ip, port, community, version)
+
+    def App_snmp_get(cls, oid):
+        '''
+        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version} ${oid}
+        [Documentation]
+        ...
+        Keyword: check_element
+        ...
+        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        [Tags] @author = Sean W
+        '''
+        return cls.snmp.snmp_get(oid)
+
+    def App_snmp_bulk(cls, oid):
+        '''
+        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version} ${oid}
+        [Documentation]
+        ...
+        Keyword: check_element
+        ...
+        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        [Tags] @author = Sean W
+        '''
+        return cls.snmp.snmp_bulk(oid)
+
+    def App_snmp_next(cls, oid):
+        '''
+        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version} ${oid}
+        [Documentation]
+        ...
+        Keyword: check_element
+        ...
+        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        [Tags] @author = Sean W
+        '''
+        return cls.snmp.snmp_next(oid)
+
+    def App_snmp_walk(cls):
+        '''
+        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version}
+        [Documentation]
+        ...
+        Keyword: check_element
+        ...
+        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        [Tags] @author = Sean W
+        '''
+        return cls.snmp.snmp_walk()
 
 
 class App_Web(object):
@@ -51,14 +114,14 @@ class App_Web(object):
 
     def App_web_find_element_by_id_send(cls, id, key, click):
         '''
-                [Arguments]    ${id}    ${key}   ${click}
-                [Documentation]
-                ...
-                Keyword: find_element_send
-                ...
-                ArgSpec(args=['self', 'id', 'key', 'click'])
-                [Tags] @author = Sean W
-                '''
+        [Arguments]    ${id}    ${key}   ${click}
+        [Documentation]
+        ...
+        Keyword: find_element_send
+        ...
+        ArgSpec(args=['self', 'id', 'key', 'click'])
+        [Tags] @author = Sean W
+        '''
         return WebAppLibrary.Web_find_by_id_send(id, key, click)
 
 class App_SSH(object):
@@ -92,23 +155,23 @@ class App_IXIA(object):
         """
         Connect to the IXIA script server via a socket.
         Connect to the IXIA chassis.
-            portList    - must be a list of tuples of three elements: (chassis, card, port)
-            srvHost     - name or IP of host running an IXIA Tcl server
-            srvPort     - port number the IXIA Tcl server is listening to
-            ixiaIp      - IP address of the IXIA chassis
-            usrName     - name of IXIA user
-            keepOwn     - if True, retain ports ownership even after the script completes
-            logProc     - supported values are:
-                              o True  - use logging of all ixTclHal commands to stdout (default value)
-                              o False - suppress IXIA API command logging
-                              o external logging procedure which takes a single argument (a string)
-            debugMode   - if True, extended debug output will be performed
-            forceOwnership - force ownsership on IXIA ports even somebody else owns them
+        portList    - must be a list of tuples of three elements: (chassis, card, port)
+        srvHost     - name or IP of host running an IXIA Tcl server
+        srvPort     - port number the IXIA Tcl server is listening to
+        ixiaIp      - IP address of the IXIA chassis
+        usrName     - name of IXIA user
+        keepOwn     - if True, retain ports ownership even after the script completes
+        logProc     - supported values are:
+                  o True  - use logging of all ixTclHal commands to stdout (default value)
+                  o False - suppress IXIA API command logging
+                  o external logging procedure which takes a single argument (a string)
+        debugMode   - if True, extended debug output will be performed
+        forceOwnership - force ownsership on IXIA ports even somebody else owns them
         """
         pass
 
     def IXIA_login(self, srvhost, ixiaip, username):
-        import sys, socket, re, os, copy, time
+        buffer = ''
         self.srvhost = '10.245.69.200'
         self.svrport = 4555
         self.ixiaip = '10.245.252.54'
@@ -122,7 +185,6 @@ class App_IXIA(object):
                    'version cget -ixTclHALVersion']
         self.session_command(command)
 
-        buffer = ''
         print ("*" * 50)
         for line in open('ixia.txt'):
             self.sockobj.send(line + "\r\n")

@@ -10,7 +10,7 @@ class SshLibrary(SSHLibrary):
         try:
             self.ssh.open_connection(host)
             self.ssh.login(user, password)
-            command = ['show card', 'paginate false', 'show run vlan 9', 'show version']
+            command = ['show card', 'paginate false', 'show run vlan', 'show version']
             self.session_command(command)
         except ValueError as e:
                 raise e
