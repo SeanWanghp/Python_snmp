@@ -31,6 +31,12 @@ ML and AI learing from YOUTUBER(VERY GOOD FOR STUDY):
 https://www.youtube.com/watch?v=WFr2WgN9_xE&feature=push-fr&attr_tag=1lGXdO_7F1ErGN8z%3A6
 Good VIDEO for TKINTER:
 https://www.youtube.com/watch?v=YXPyB4XeYLA&feature=push-fr&attr_tag=tGRvWZyeBXIf5sD-%3A6
+
+REALPYTHON:
+https://realpython.com/lessons/two-threads/
+
+Danbader:
+https://dbader.org/blog/python-file-io
 '''
 
 

@@ -15,12 +15,12 @@ class App(object):
 
     def App_click_element(cls, locator):
         '''
-        [Arguments]    ${locator}    ${selected}    ${timeout} =${30}
+        [Arguments]    ${locator}    ${timeout} =${30}
         [Documentation]
         ...
         Keyword: check_element
         ...
-        ArgSpec(args=['self', 'locator', 'selected', 'timeout'], varargs=None, keywords=None, defaults=(30,))
+        ArgSpec(args=['self', 'locator', 'timeout'], varargs=None, keywords=None, defaults=(30,))
         [Tags] @author = Sean W
         '''
         return MobileAppLibrary().click_element(locator)
@@ -35,48 +35,48 @@ class App_Snmp(object):
 
     def App_snmp_get(cls, oid):
         '''
-        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version} ${oid}
+        [Arguments]    ${oid}
         [Documentation]
         ...
-        Keyword: check_element
+        Keyword: app_snmp_get
         ...
-        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        ArgSpec(args=['oid'])
         [Tags] @author = Sean W
         '''
         return cls.snmp.snmp_get(oid)
 
     def App_snmp_bulk(cls, oid):
         '''
-        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version} ${oid}
+        [Arguments]    ${oid}
         [Documentation]
         ...
-        Keyword: check_element
+        Keyword: app_snmp_bulk
         ...
-        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        ArgSpec(args=['oid'])
         [Tags] @author = Sean W
         '''
         return cls.snmp.snmp_bulk(oid)
 
     def App_snmp_next(cls, oid):
         '''
-        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version} ${oid}
+        [Arguments]    ${oid}
         [Documentation]
         ...
-        Keyword: check_element
+        Keyword: app_snmp_next
         ...
-        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        ArgSpec(args=['oid'])
         [Tags] @author = Sean W
         '''
         return cls.snmp.snmp_next(oid)
 
     def App_snmp_walk(cls):
         '''
-        [Arguments]    ${ip}    ${port}    ${community} =${public}  ${version}
+        [Arguments]    ${oid}
         [Documentation]
         ...
-        Keyword: check_element
+        Keyword: app_snmp_walk
         ...
-        ArgSpec(args=['ip', 'port', 'community', 'version'], varargs=None, keywords=None, defaults=(30,))
+        ArgSpec(args=['oid'])
         [Tags] @author = Sean W
         '''
         return cls.snmp.snmp_walk()
@@ -88,7 +88,7 @@ class App_Web(object):
 
     def App_web_login(cls, ip, port, ff):
         '''GUI login
-        [Arguments]    ${id}    ${port}'''
+        [Arguments]    ${id}    ${port}     ${ff}'''
         # self.web = WebAppLibrary
         if WebAppLibrary.Web_login(ip, port, ff):
             return True
@@ -130,7 +130,7 @@ class App_SSH(object):
 
     def ssh_(cls, host, user, password):
         '''login with SSH
-        [Arguments]    ${host}'''
+        [Arguments]    ${host}    ${user}    ${password}'''
         return SshLibrary.ssh_(host, user, password)
 
     def ssh_session_command_(cls, command='show inter sum'):
