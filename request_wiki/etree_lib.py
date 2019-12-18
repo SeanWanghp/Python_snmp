@@ -115,8 +115,10 @@ def xpathgetcontent():
 
         print(url)
         response = requests.get(url=url, headers=headers)
+        """response.text return html, response.content return CODE CONTENT of html"""
         # response = requests.get(url=url)
         # check the coding mode
+        print(response.encoding)
         print(response.apparent_encoding)
         # print(response.content.decode('gbk'))
         tree = etree.HTML(response.content)
@@ -162,12 +164,39 @@ def xpathgetcontent():
 
 
 def find51job():
-    key = input("input job keyword: ")
-
-    url = url%(key)
+    url = 'https://search.51job.com/list/010000,000000,0000,00,9,99,%s,2,1.html'
+    url_NJ = 'https://search.51job.com/list/070200,000000,0000,00,9,99,%s,2,1.html'
+    # key = input("input job keyword: ")
+    key = '人工智能'
+    key = '自动化'
+    url = url_NJ % key
 
     response = requests.get(url)
     response.encoding = 'gbk'
+    text = response.text
+    tree = etree.HTML(text)
+    divs = tree.xpath('//div[@class="dw_table"]/div[@class="el"]')
+    print(len(divs))
+
+    # fp = open('./51job.txt', mode='a', encoding='utf-8')
+    for div in divs:
+        try:
+            # print("div: {}".format(etree.tostring(div, encoding='utf-8').decode('utf-8')))
+            title = div.xpath('.//p//a/@title')
+            com = div.xpath('.//span[@class="t2"]/a/@title')[0]
+            address = div.xpath('.//span[@class="t3"]/text()')[0]
+            date = div.xpath('.//span[@class="t5"]/text()')[0]
+            salary = div.xpath('.//span[@class="t4"]/text()')[0]
+            """salary can not get out with error"""
+            # if div.xpath('.//span[@class="t4"]/text()')[0]:
+            #     salary = div.xpath('.//span[@class="t4"]/text()')[0]
+            # else:
+            #     pass
+            print('job: {}.Company: {}.Address: {}.Salary: {}.Issuedate: {}'.format(title, com, address, salary, date))
+            # fp.write('job: {}. Company: {}. Address: {}. Issuedate: {}'.format(com, address, salary, date))
+        except Exception as e:
+            print('job: {}.Company: {}.Address: {}.Salary: {}.Issuedate: {}'.format(title, com, address, 'Talking', date))
+        # fp.close()
 
 
 if __name__ == '__main__':
@@ -175,3 +204,4 @@ if __name__ == '__main__':
     # getfromhtml()
     # morepic()
     xpathgetcontent()
+    find51job()
