@@ -13,3 +13,12 @@ Description:    CentOS release 5.5 (Final)
 Release:        5.5
 Codename:       Final
 [root@localhost ~]# 
+
+
+
+# change liunx nopassword with sudo command
+vi /etc/sudoers
+## Same thing without a password
+calix   ALL=(ALL)       NOPASSWD: ALL
+
+sudo -i  	#will no passord showing up
