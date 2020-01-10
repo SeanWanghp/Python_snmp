@@ -48,3 +48,37 @@ export PATH=/usr/local/mongodb/bin:$PATH
 生效方法：系统重启
 有效期限：永久有效
 用户局限：对所有用户
+
+
+如上命令所示，我们仅仅能看到超过800M大小的文件的文件名称，但是对文件的信息（例如，文件大小、文件属性）一无所知，那么能否更详细显示一些文件属性或信息呢，当然可以，如下所示
+find / -type f -size +800M  -print0 | xargs -0 ls -lah
+
+
+[root@getlnx01 u03]# find / -type f -size +800M
+[root@getlnx01 u03]# find . -type f -size +800M  -print0 | xargs -0 ls -l
+当我们只需要查找超过800M大小文件，并显示查找出来文件的具体大小，可以使用下面命令
+[root@getlnx01 u03]# find . -type f -size +800M  -print0 | xargs -0 du -h
+如果你还需要对查找结果按照文件大小做一个排序，那么可以使用下面命令
+[root@getlnx01 u03]# find . -type f -size +800M  -print0 | xargs -0 du -h | sort -nr
+
+譬如有时候磁盘空间告警了，而你平时又疏于管理、监控文件的增长，那么我需要快速的了解哪些目录变得比较大，那么此时我们可以借助du命令来帮我们解决这个问题。
+[root@getlnx01 u03]# du -h --max-depth=1
+如果你想知道flash_recovery_area目录下面有哪些大文件夹，那么可以将参数max-depth=2 ，如果你想对搜索出来的结果进行排序，那么可以借助于sort命令。如下所示
+
+[root@getlnx01 u03]# du -h --max-depth=2 | sort -n
+[root@getlnx01 u03]# du -hm --max-depth=2 | sort -n
+[root@getlnx01 /]# du -hm --max-depth=2 | sort -n
+
+有时候搜索出来的结果太多了（譬如，我从根目录开始搜索），一直在刷屏，如果我只想查出最大的12个文件夹，怎么办呢？此时就要借助head命令来显示了
+[root@getlnx01 /]# du -hm --max-depth=2 | sort -nr | head -12
+
+
+实例命令：
+find /opt/soft/log/ -mtime +30 -name ".log" -exec rm -rf {} \;
+说明：
+将/opt/soft/log/目录下所有30天前带".log"的文件删除。
+
+
+echo > /var/log/big.log此命令会把/var/log目录中的big.log文件内容清除，而又不删除big.log文件
+cat > /var/log/big.log此命令能与“echo > /var/log/big.log”达到相同效果，不过，命令执行后，需要用“Ctrl + d”结束
+clear > /var/log/big.log此命令会把big.log文件内容清空，而不删除文件
