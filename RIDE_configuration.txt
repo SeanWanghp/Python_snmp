@@ -12,6 +12,8 @@ C:\Python27\Lib\site-packages\SeleniumLibrary\keywords\browsermanagement.py   #G
 C:\Python27\Lib\site-packages\robot\api\deco.py		#keywords\browsermanagement method
 
 
+C:\Python37\Lib\site-packages\robotide\contrib\testrunner\testrunnerplugin.py  #encoding for system
+
 
 
 RIDE INSTALL:
