@@ -1,4 +1,4 @@
-GIT command
+GIT command:
 
 $ git init  // 初始化一个Git仓库
 $ git status   // 查看仓库的状态
