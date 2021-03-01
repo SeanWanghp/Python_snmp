@@ -1,0 +1,37 @@
+/home/atian/Data/E7_REPO_UPDATE/RF_test_suites/ST_TC_Repository/MACFF_IPSV_ARP_Proxy/MACFF/MACFF_Static_Snoop_Entries/Common/tc_Subscriber_Side_Untagged_w_Add_2_Tags_with_Subscriber_Untagged_Traffic_Entry_Recreate.robot 
+
+
+git clone -b IB-STABLE http://cdc-git/repos/sit/platform/access.git  e7_regression
+
+http://cdc-cafe:8000/lib/WebGuiAdapter 
+
+
+ixnet_server: vmcdc-ixia19:8009
+tcl_server: vmcdc-ixia19
+caxxx/cafe   caxxx123
+ 
+
+
+
+-bash-4.2$ yum install -y wireshark
+Loaded plugins: fastestmirror, langpacks
+You need to be root to perform this command.
+
+sudo yum install -y wireshark
+
+wget ftp://cdc-cafe/Toolkit/wireshark-2.4.3-1.centos7_x86_64.rpm
+yum remove wireshark-gnome -y
+yum remove wireshark -y
+yum install ./wireshark-2.4.3-1.centos7_x86_64.rpm -y 
+
+fab -f fab_dav_q.py dotask
+
+fab -f fab_smx_shell.py run_a run_b
+
+
+ 1、安装方法
+
+    CentOS: yum install -y wireshark
+    Ubuntu: apt-get install -y tshark
+
+
