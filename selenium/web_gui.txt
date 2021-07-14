@@ -1,5 +1,13 @@
 chrome driver download page:  http://chromedriver.storage.googleapis.com/index.html
 
+
+pip install --upgrade pip -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
+python -m pip install color -i https://pypi.douban.com/simple
+
+pip --default-timeout=100 install -U pip
+pip --default-timeout=100 install -U scrapy
+
 chrome and firefox with selenium version:
 https://blog.csdn.net/WF466764515/article/details/72675476
 
@@ -8,8 +16,7 @@ Firefox VERSION:
 http://ftp.mozilla.org/pub/firefox/releases/
 
 
-£®1£©WEB“≥√Ê≤‚ ‘£∫
 https://pypi.python.org/pypi/robotframework
-https://pypi.python.org/pypi/selenium#downloads                   °°  #“¿¿µ∞¸
-https://pypi.python.org/pypi/robotframework-seleniumlibrary        #“¿¿µ∞¸
+https://pypi.python.org/pypi/selenium#downloads                   
+https://pypi.python.org/pypi/robotframework-seleniumlibrary       
 https://pypi.python.org/pypi/robotframework-selenium2library

@@ -7,7 +7,6 @@ import calendar
 from calendar import HTMLCalendar
 from django.views.decorators.csrf import requires_csrf_token
 
-
 default_encoding = 'utf-8'
 if sys.getdefaultencoding() != default_encoding:
     reload(sys)
@@ -15,6 +14,8 @@ if sys.getdefaultencoding() != default_encoding:
 
 '''create another blog for Django
     https://djangocentral.com/building-a-blog-application-with-django/'''
+
+
 # Create your views here.
 @requires_csrf_token
 def Index(request):
@@ -105,6 +106,7 @@ def add2(request, a, b):
     r = run('Maojun').name
     t = str(c) + r
     return HttpResponse(str(t))
+
 
 def movie(request):
     '''https://www.cnblogs.com/leffss/p/11271097.html   can useing web for telnet'''
