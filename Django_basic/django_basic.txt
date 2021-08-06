@@ -6,3 +6,7 @@ cd DjangoDemo
 python manage.py startapp demoapp
 
 Django可以做成自动搜索自动化数据和问题单的图表模式
+
+
+
+https://realpython.com/django-setup/#django-install
