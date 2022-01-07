@@ -8,7 +8,6 @@ create database falcon；
 show databases;
 use falcon;
 
-
 #表格不能带引号，否则会报错：
 create table stat 
 (
@@ -22,8 +21,6 @@ create table stat
  PRIMARY KEY (id),
  KEY host (host(255))
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
-
-
 
 查看数据库内容:
 use falcon;
