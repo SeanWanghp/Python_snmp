@@ -1,0 +1,630 @@
+root@10GE-12:~# show system process
+-bash: show: command not found
+root@10GE-12:~# dcli plmgrd show meminfo
+plmgrd>show meminfo
+MemTotal: 3984320 KB, 3890 MB
+MemAvailable: 2411424 KB, 2354 MB
+PageTables: 14432 KB, 14 MB
+root@10GE-12:~# free
+              total        used        free      shared  buff/cache   available
+Mem:        3984320     1190444      978340      336116     1815536     2411808
+Swap:             0           0           0
+root@10GE-12:~# dcli plmgrd show info
+plmgrd>show info
+System Info
+----------------------------------------
+uptime                   8 days 52 min (hh:min)
+cpu usage                10%     
+ram usage                39      %     
+available memory         2410228 KB    
+system temperature       36.0 degC 
+fan speed                43%     
+----------------------------------------
+Total RAM                3984320 KB
+Available RAM            2410228 KB  60%
+Used RAM                 1574092 KB  39%
+----------------------------------------
+CPU Proc Load - 1s       72%
+CPU Proc Load - 5s       68%
+CPU Procs Load - 15s     65%
+----------------------------------------
+Procs                    570  
+----------------------------------------
+/mnt/rw                  33      KB  33%
+/var/volatile            8       KB  8%
+/media/sda1              46      KB  46%
+/media/sda2              57      KB  57%
+root@10GE-12:~# 
+
+VM:
+Hostname:	nanst-nagios-06.calix.local
+IP:			10.245.251.67
+Username:	calix
+Password:	Calix123
+
+http://nanst-nagios-03.calix.local/nagios/ 
+nagiosadmin/Calix123
+
+http://nanst-nagios-05.calix.local/nagios/
+nanst_nagios_05 : calix/Calix123
+
+
+
+
+
+
+CFG file path, define the running path for Nagios:
+[root@nanst-nagios-05 etc]# pwd
+/usr/local/nagios/etc
+[root@nanst-nagios-05 etc]# 
+[root@nanst-nagios-05 etc]# vi nagios.cfg 
+
+log_file=/usr/local/nagios/var/nagios.log
+cfg_dir=/usr/local/nagios/etc/hulk
+
+
+# You can specify individual object config files as shown below:
+cfg_file=/usr/local/nagios/etc/objects/commands.cfg
+cfg_file=/usr/local/nagios/etc/objects/contacts.cfg
+cfg_file=/usr/local/nagios/etc/objects/timeperiods.cfg
+cfg_file=/usr/local/nagios/etc/objects/templates.cfg
+
+
+
+define command path:
+[root@nanst-nagios-05 objects]# pwd
+/usr/local/nagios/etc/objects
+
+Script path:
+[root@nanst-nagios-05 nagios]# cd libexec/
+[root@nanst-nagios-05 libexec]# ls
+
+
+Main config, include usname:
+vim /usr/local/nagios/etc/cgi.cfg
+
+
+resource_file=/usr/local/nagios/etc/resource.cfg
+# Path to the plugins
+$USER1$=/usr/local/nagios/libexec
+
+command_file=/usr/local/nagios/var/rw/nagios.cmd
+
+
+
+https://blog.csdn.net/ronmy/article/details/65662302
+
+
+ 5.3.1 验证程序是否被正确安装
+
+切换目录到安装路径（这里是/usr/local/nagios），看是否存在etc、bin、sbin、share、var 这五个目录，如果存在则可以表明程序被正确的安装到系统了。
+Nagios 各个目录用途说明如下：
+bin				Nagios 可执行程序所在目录
+etc				Nagios 配置文件所在目录
+sbin			Nagios CGI 文件所在目录，也就是执行外部命令所需文件所在的目录
+share			Nagios网页文件所在的目录
+libexec			Nagios 外部插件所在目录
+var				Nagios 日志文件、lock 等文件所在的目录
+var/archives	Nagios 日志自动归档目录
+var/rw			用来存放外部命令文件的目录
+
+
+Nagios 主要用于监控一台或者多台本地主机及远程的各种信息，包括本机资源及对外的服务等。默认的Nagios 配置没有任何监控内容，仅是一些模板文件。
+若要让Nagios 提供服务，就必须修改配置文件，增加要监控的主机和服务，下面将详细介绍。
+
+6.1 默认配置文件介绍
+
+Nagios 安装完毕后，默认的配置文件在/usr/local/nagios/etc目录下。
+
+29
+
+每个文件或目录含义如下表所示：
+文件名或目录名	用途
+cgi.cfg	控制CGI访问的配置文件
+nagios.cfg	Nagios 主配置文件
+resource.cfg	变量定义文件，又称为资源文件，在些文件中定义变量，以便由其他配置文件引用，如$USER1$
+objects	objects 是一个目录，在此目录下有很多配置文件模板，用于定义Nagios 对象
+objects/commands.cfg	命令定义配置文件，其中定义的命令可以被其他配置文件引用
+objects/contacts.cfg	定义联系人和联系人组的配置文件
+objects/localhost.cfg	定义监控本地主机的配置文件
+objects/printer.cfg	定义监控打印机的一个配置文件模板，默认没有启用此文件
+objects/switch.cfg	定义监控路由器的一个配置文件模板，默认没有启用此文件
+objects/templates.cfg	定义主机和服务的一个模板配置文件，可以在其他配置文件中引用
+objects/timeperiods.cfg	定义Nagios 监控时间段的配置文件
+objects/windows.cfg	监控Windows 主机的一个配置文件模板，默认没有启用此文件
+
+6.2 配置文件之间的关系
+在nagios的配置过程中涉及到的几个定义有：主机、主机组，服务、服务组，联系人、联系人组，监控时间，监控命令等，从这些定义可以看出，nagios各个配置文件之间是互为关联，彼此引用的。
+
+成功配置出一台nagios监控系统，必须要弄清楚每个配置文件之间依赖与被依赖的关系，最重要的有四点：
+
+第一：定义监控哪些主机、主机组、服务和服务组； 
+第二：定义这个监控要用什么命令实现； 
+第三：定义监控的时间段； 
+第四：定义主机或服务出现问题时要通知的联系人和联系人组。
+
+6.3 配置Nagios
+
+为了能更清楚的说明问题，同时也为了维护方便，建议将nagios各个定义对象创建独立的配置文件：
+
+ 创建hosts.cfg文件来定义主机和主机组
+ 创建services.cfg文件来定义服务
+ 用默认的contacts.cfg文件来定义联系人和联系人组
+ 用默认的commands.cfg文件来定义命令
+ 用默认的timeperiods.cfg来定义监控时间段
+ 用默认的templates.cfg文件作为资源引用文件
+ 
+  a. templates.cfg文件
+
+nagios主要用于监控主机资源以及服务，在nagios配置中称为对象，为了不必重复定义一些监控对象，Nagios引入了一个模板配置文件，将一些共性的属性定义成模板，以便于多次引用。这就是templates.cfg的作用。
+
+下面详细介绍下templates.cfg文件中每个参数的含义：
+复制代码
+复制代码
+
+b. resource.cfg文件
+
+resource.cfg是nagios的变量定义文件，文件内容只有一行：
+
+其中，变量$USER1$指定了安装nagios插件的路径，如果把插件安装在了其它路径，只需在这里进行修改即可。需要注意的是，变量必须先定义，然后才能在其它配置文件中进行引用。
+
+c. commands.cfg文件
+
+此文件默认是存在的，无需修改即可使用，当然如果有新的命令需要加入时，在此文件进行添加即可。
+复制代码
+复制代码
+
+d. hosts.cfg文件
+
+此文件默认不存在，需要手动创建，hosts.cfg主要用来指定被监控的主机地址以及相关属性信息，根据实验目标配置如下：
+复制代码
+复制代码
+
+注意：在/usr/local/nagios/etc/objects 下默认有localhost.cfg 和windows.cfg 这两个配置文件，localhost.cfg 文件是定义监控主机本身的，windows.cfg 文件是定义windows 主机的，其中包括了对host 和相关services 的定义。所以在本次实验中，将直接在localhost.cfg 中定义监控主机（Nagios-Server），在windows.cfg中定义windows 主机（Nagios-Windows）。根据自己的需要修改其中的相关配置，详细如下：
+
+localhost.cfg
+复制代码
+复制代码
+
+windows.cfg
+复制代码
+复制代码
+
+e. services.cfg文件
+
+此文件默认也不存在，需要手动创建，services.cfg文件主要用于定义监控的服务和主机资源，例如监控http服务、ftp服务、主机磁盘空间、主机系统负载等等。Nagios-Server 和Nagios-Windows 相关服务已在相应的配置文件中定义，所以这里只需要定义Nagios-Linux 相关服务即可，这里只定义一个检测是否存活的服务来验证配置文件的正确性，其他服务的定义将在后面讲到。
+复制代码
+复制代码
+
+f. contacts.cfg文件
+
+contacts.cfg是一个定义联系人和联系人组的配置文件，当监控的主机或者服务出现故障，nagios会通过指定的通知方式（邮件或者短信）将信息发给这里指定的联系人或者使用者。
+复制代码
+复制代码
+
+g. timeperiods.cfg文件
+
+此文件只要用于定义监控的时间段，下面是一个配置好的实例：
+复制代码
+复制代码
+
+h. cgi.cfg文件
+
+此文件用来控制相关cgi脚本，如果想在nagios的web监控界面执行cgi脚本，例如重启nagios进程、关闭nagios通知、停止nagios主机检测等，这时就需要配置cgi.cfg文件了。
+由于nagios的web监控界面验证用户为david，所以只需在cgi.cfg文件中添加此用户的执行权限就可以了，需要修改的配置信息如下：
+复制代码
+复制代码
+
+i. nagios.cfg文件
+
+nagios.cfg默认的路径为/usr/local/nagios/etc/nagios.cfg，是nagios的核心配置文件，所有的对象配置文件都必须在这个文件中进行定义才能发挥其作用，这里只需将对象配置文件在Nagios.cfg文件中进行引用即可。
+复制代码
+复制代码
+
+6.4 验证Nagios 配置文件的正确性
+
+Nagios 在验证配置文件方面做的非常到位，只需通过一个命令即可完成：
+ 
+Nagios提供的这个验证功能非常有用，在错误信息中通常会打印出错误的配置文件以及文件中的哪一行，这使得nagios的配置变得非常容易，报警信息通常是可以忽略的，因为一般那些只是建议性的。 
+
+看到上面这些信息就说明没问题了，然后启动Nagios 服务。
+七、Nagios的启动与停止
+
+7.1 启动Nagios
+
+a. 通过初始化脚本启动nagios
+
+b. 手工方式启动nagios
+通过nagios命令的“-d”参数来启动nagios守护进程：
+
+7.2 重启Nagios
+
+当修改了配置文件让其生效时，需要重启/重载Nagios服务。
+
+a. 通过初始化脚本来重启nagios
+
+b. 通过web监控页重启nagios
+
+可以通过web监控页的 "Process Info" -> "Restart the Nagios process"来重启nagios
+
+c. 手工方式平滑重启
+
+7.3 停止Nagios
+
+a. 通过初始化脚本关闭nagios服务
+
+b. 通过web监控页停止nagios
+
+可以通过web监控页的 "Process Info" -> "Shutdown the Nagios process"来停止nagios
+
+c. 手工方式停止Nagios
+
+八、查看初步配置情况
+
+8.1 启动完成之后，登录Nagios Web监控页http://192.168.1.108/nagios/ 查看相关信息。
+
+8.2 点击左面的Current Status -> Hosts 可以看到所定义的三台主机已经全部UP了。
+
+8.3 点击Current Status -> Services 查看服务监控情况。
+
+看到Nagios-Linux和Nagios-Server的服务状态已经OK了，但是Nagios-Windows的服务状态为CRITICAL，Status Information 提示Connection refused。因为Nagios-Windows上还未安装插件，内部服务还无法查看，所以出现这种情况。将在下面具体讲解。
+
+九、利用NRPE监控远程Linux上的“本地信息”
+
+上面已经对远程Linux 主机是否存活做了监控，而判断远程机器是否存活，我们可以使用ping 工具对其监测。还有一些远程主机服务，例如ftp、ssh、http，都是对外开放的服务，即使不用Nagios，我们也可以试的出来，随便找一台机器看能不能访问这些服务就行了。但是对于像磁盘容量，cpu负载这样的“本地信息”，Nagios只能监测自己所在的主机，而对其他的机器则显得有点无能为力。毕竟没得到被控主机的适当权限是不可能得到这些信息的。为了解决这个问题，nagios有这样一个附加组件--“NRPE”，用它就可以完成对Linux 类型主机"本地信息”的监控。
+
+9.1 NRPE 工作原理
+
+nrpe
+NRPE 总共由两部分组成：
+
+    check_nrpe 插件，位于监控主机上
+    NRPE daemon，运行在远程的Linux主机上(通常就是被监控机)
+
+按照上图，整个的监控过程如下：
+
+当Nagios 需要监控某个远程Linux 主机的服务或者资源情况时：
+
+    Nagios 会运行check_nrpe 这个插件，告诉它要检查什么；
+    check_nrpe 插件会连接到远程的NRPE daemon，所用的方式是SSL；
+    NRPE daemon 会运行相应的Nagios 插件来执行检查；
+    NRPE daemon 将检查的结果返回给check_nrpe 插件，插件将其递交给nagios做处理。
+
+注意：NRPE daemon 需要Nagios 插件安装在远程的Linux主机上，否则，daemon不能做任何的监控。
+
+9.2 在被监控机（Nagios-Linux）上
+
+a. 增加用户&设定密码
+
+# useradd nagios
+
+# passwd nagios
+
+b. 安装Nagios 插件
+
+这一步完成后会在/usr/local/nagios/下生成三个目录include、libexec和share。
+ 
+
+修改目录权限
+
+c. 安装NRPE
+
+接下来安装NPRE插件，daemon和示例配置文件。
+
+c.1 安装check_nrpe 这个插件
+
+# make install-plugin
+
+监控机需要安装check_nrpe 这个插件，被监控机并不需要，我们在这里安装它只是为了测试目的。
+
+c.2 安装deamon
+
+# make install-daemon
+
+c.3 安装配置文件
+
+# make install-daemon-config
+
+现在再查看nagios 目录就会发现有5个目录了
+
+按照安装文档的说明，是将NRPE deamon作为xinetd下的一个服务运行的。在这样的情况下xinetd就必须要先安装好，不过一般系统已经默认安装了。
+
+d. 安装xinted 脚本
+
+# make install-xinetd
+
+可以看到创建了这个文件/etc/xinetd.d/nrpe。
+
+编辑这个脚本：
+
+在only_from 后增加监控主机的IP地址。
+
+编辑/etc/services 文件，增加NRPE服务
+
+重启xinted 服务
+
+# service xinetd restart
+
+查看NRPE 是否已经启动
+
+可以看到5666端口已经在监听了。
+
+e. 测试NRPE是否则正常工作
+
+使用上面在被监控机上安装的check_nrpe 这个插件测试NRPE 是否工作正常。
+
+# /usr/local/nagios/libexec/check_nrpe -H localhost
+
+会返回当前NRPE的版本
+
+也就是在本地用check_nrpe连接nrpe daemon是正常的。
+
+注：为了后面工作的顺利进行，注意本地防火墙要打开5666能让外部的监控机访问。
+
+f. check_nrpe 命令用法
+
+查看check_nrpe 命令用法
+
+# /usr/local/nagios/libexec/check_nrpe –h
+
+可以看到用法是：
+
+check_nrpe –H 被监控的主机 -c 要执行的监控命令
+
+注意：-c 后面接的监控命令必须是nrpe.cfg 文件中定义的。也就是NRPE daemon只运行nrpe.cfg中所定义的命令。
+
+g. 查看NRPE的监控命令
+
+# cd /usr/local/nagios/etc
+
+# cat nrpe.cfg |grep -v "^#"|grep -v "^$"
+复制代码
+复制代码
+
+红色部分是命令名，也就是check_nrpe 的-c 参数可以接的内容，等号 “=” 后面是实际执行的插件程序（这与commands.cfg 中定义命令的形式十分相似，只不过是写在了一行）。也就是说check_users 就是等号后面/usr/local/nagios/libexec/check_users -w 5 -c 10 的简称。
+
+我们可以很容易知道上面这5行定义的命令分别是检测登陆用户数，cpu负载，sda1的容量，僵尸进程，总进程数。各条命令具体的含义见插件用法（执行“插件程序名 –h”）。
+
+由于-c 后面只能接nrpe.cfg 中定义的命令，也就是说现在我们只能用上面定义的这五条命令。我们可以在本机实验一下。
+
+9.3 在监控主机（Nagios-Server）上
+
+之前已经将Nagios运行起来了，现在要做的事情是：
+
+    安装check_nrpe 插件；
+    在commands.cfg 中创建check_nrpe 的命令定义，因为只有在commands.cfg 中定义过的命令才能在services.cfg 中使用；
+    创建对被监控主机的监控项目；
+
+9.3.1 安装check_nrpe 插件
+
+只运行这一步就行了，因为只需要check_nrpe插件。
+
+在Nagios-Linux 上我们已经装好了nrpe，现在我们测试一下监控机使用check_nrpe 与被监控机运行的nrpe daemon之间的通信。
+
+看到已经正确返回了NRPE的版本信息，说明一切正常。
+
+9.3.2 在commands.cfg中增加对check_nrpe的定义
+
+# vi /usr/local/nagios/etc/objects/commands.cfg
+
+在最后面增加如下内容：
+
+意义如下：
+复制代码
+复制代码
+
+-c 后面带的$ARG1$ 参数是传给nrpe daemon 执行的检测命令，之前说过了它必须是nrpe.cfg 中所定义的那5条命令中的其中一条。在services.cfg 中使用check_nrpe 的时候要用 “!” 带上这个参数。
+
+9.3.3 定义对Nagios-Linux 主机的监控
+
+下面就可以在services.cfg 中定义对Nagios-Linux 主机的监控了。
+复制代码
+复制代码
+
+还有一个任务是要监控Nagios-Linux 的swap 使用情况。但是在nrpe.cfg 中默认没有定义这个监控功能的命令。怎么办？手动在nrpe.cfg 中添加，也就是自定义NRPE命令。
+
+现在我们要监控swap 分区，如果空闲空间小于20%则为警告状态 -> warning；如果小于10%则为严重状态 -> critical。我们可以查得需要使用check_swap插件，完整的命令行应该是下面这样。
+
+# /usr/local/nagios/libexec/check_swap -w 20% -c 10%
+
+在被监控机（Nagios-Linux）上增加check_swap 命令的定义
+
+# vi /usr/local/nagios/etc/nrpe.cfg
+
+增加下面这一行
+
+command[check_swap]=/usr/local/nagios/libexec/check_swap -w 20% -c 10%
+
+我们知道check_swap 现在就可以作为check_nrpe 的-c 的参数使用了
+
+修改了配置文件，当然要重启。
+
+如果你是以独立的daemon运行的nrpe，那么需要手动重启；如果你是在xinetd 下面运行的，则不需要。
+
+由于本实验中nrpe 是xinetd 下运行的，所以不需要重启服务。
+
+在监控机（Nagios-Server）上增加这个check_swap 监控项目
+复制代码
+复制代码
+
+同理，Nagios-Linux 上我还开启了http 服务，需要监控一下，按照上面的做法，在被监控机（Nagios-Linux）上增加check_http 命令的定义
+
+# vi /usr/local/nagios/etc/nrpe.cfg
+
+增加下面这一行
+
+command[check_http]=/usr/local/nagios/libexec/check_http -I 127.0.0.1
+
+在监控机（Nagios-Server）上增加check_http 监控项目
+复制代码
+复制代码
+
+所有的配置文件已经修改好了，现在重启Nagios。
+
+# service nagios restart
+
+9.3.4 查看配置情况
+
+登录Nagios Web监控页http://192.168.1.108/nagios/ 查看相关信息。
+
+可以看到，对于Nagios-Server 和Nagios-Linux 上的相关服务的监控已经成功了，还有Nagios-Windows 上的服务还没有定义，下面讲到。
+
+
+
+十、利用NSClient++监控远程Windows上的“本地信息”
+
+在Nagios的libexec下有check_nt这个插件，它就是用来检查windows机器的服务的。其功能类似于check_nrpe。不过还需要搭配另外一个软件NSClient++，它则类似于NRPE。
+
+NSClient++的原理如下图
+
+可以看到NSClient与nrpe最大的区别就是：
+
+    被监控机上安装有nrpe，并且还有插件，最终的监控是由这些插件来进行的。当监控主机将监控请求发给nrpe后，nrpe调用插件来完成监控。
+    NSClient++则不同，被监控机上只安装NSClient，没有任何的插件。当监控主机将监控请求发给NSClient++后，NSClient直接完成监控，所有的监控是由NSClient完成的。
+
+这也说明了NSClient++的一个很大的问题：不灵活、没有可扩展性。它只能完成自己本身包含的监控操作，不能由一些插件来扩展。好在NSClient++已经做的不错了，基本上可以完全满足我们的监控需求。
+
+10.1 安装NSClient++
+
+从http://www.nsclient.org/nscp/downloads 下载NSClient++-0.2.7.zip
+
+解压到C盘根目录。
+
+打开cmd 切换到c:\NSClient++-0.2.7
+
+执行nsclient++ /install 进行安装
+
+执行nsclient++ SysTray （注意大小写），这一步是安装系统托盘，时间稍微有点长。
+
+在运行里面输入 services.msc  打开“ 服务 ”
+
+ 
+
+看到下图就说明NSClient服务已经安装上了
+
+ 
+
+双击打开，点“登录”标签，在“允许服务与桌面交互”前打勾。
+
+编辑c:\NSClient++-0.2.7下的NSC.ini文件。
+
+将 [modules]部分的所有模块前面的注释都去掉，除了CheckWMI.dll 和 RemoteConfiguration.dll 这两个。
+
+在[Settings]部分设置'password'选项来设置密码，作用是在nagios连接过来时要求提供密码。这一步是可选的，我这里设置为'123456'。
+
+将[Settings]部分'allowed_hosts'选项的注释去掉，并且加上运行nagios的监控主机的IP。各IP之间以逗号相隔。这个地方是支持子网的，如果写成192.168.1.0/24则表示该子网内的所有机器都可以访问。如果这个地方是空白则表示所有的主机都可以连接上来。
+
+注意是[Settings]部分的，因为[NSClient]部分也有这个选项。
+
+必须保证[NSClient]的'port'选项并没有被注释，并且它的值是'12489'，这是NSClient的默认监听端口。
+
+在cmd 中执行nsclient++ /start启动服务，注意所在目录是c:\NSClient++-0.2.7
+
+这时在桌面右下角的系统托盘处会出现一个黄色的M字样的图标
+
+查看服务
+
+已经正常启动了。
+
+注意服务默认设的是“自动”，也就是说是开机自动启动的。
+
+在cmd 里面执行netstat –an 可以看到已经开始监听tcp的12489端口了。
+
+这样外部就可以访问了吗？
+
+错！
+
+防火墙也要打开tcp的12489端口，否则nagios 检查此服务的时候会报错。
+
+这样被监控机的配置就搞定了，它就等待nagios 发出某个监控请求，然后它执行请求将监控的结果发回到nagios监控主机上。
+
+之前已经在监控主机（Nagios-Server）上对Windows 主机的监控做了配置，但是commands.cfg 中默认没有设置密码项，所以要修改一下，增加"-s 123456"，如下：
+
+现在打开Nagios Web监控页便可查看到相关信息了。
+
+可以看到有错误：NSClient - ERROR: PDH Collection thread not running.
+
+Google 一下，是由于操作系统语言的问题，好像NSClient 默认支持的语言并不多，具体可以百度一下。
+
+查看NSClient的日志C:\NSClient++-0.2.7\nsclient.log，信息如下：
+
+需要手动配置performance counters。
+
+打开C:\NSClient++-0.2.7\counters.defs文件，复制文件里面"English US"那部分内容，粘贴到counters.defs 文件的最后，修改Description = "Chinese"。
+
+修改完之后，在mmc中重启NSClient 服务。
+
+然后查看日志，内容如下：
+
+在正常执行了。
+
+打开Nagios Web监控页查看。
+
+执行成功，但是W3SVC服务为Unknown 状态。查资料，需要开启Windows 的IIS服务。
+
+打开“控制面板”进行安装。
+
+安装完毕后，再到Nagios Web监控页查看，全部监控正常。
+
+ 
+
+十一、Nagios邮件报警的配置
+
+11.1 安装sendmail 组件
+
+首先要确保sendmail 相关组件的完整安装，我们可以使用如下的命令来完成sendmail 的安装：
+
+# yum install -y sendmail*
+
+然后重新启动sendmail服务：
+
+# service sendmail restart
+
+然后发送测试邮件，验证sendmail的可用性：
+
+# echo "Hello World" | mail david.tang@bsmart.cn
+
+11.2 邮件报警的配置
+
+在上面我们已经简单配置过了/usr/local/nagios/etc/objects/contacts.cfg 文件，Nagios 会将报警邮件发送到配置文件里的E-mail 地址。
+
+11.3 Nagios 通知
+
+PROBLEM
+
+RECOVERY
+
+Linux下Nagios安装配置完毕。 
+
+ 
+
+参考资料
+
+    Nagios官方网站：http://www.nagios.org/
+    yahoon的小屋 《nagios全攻略》：http://yahoon.blog.51cto.com/
+    技术成就梦想 《运维监控利器Nagios》：http://ixdba.blog.51cto.com/
+
+
+安装中文版：
+
+https://jaist.dl.sourceforge.net/project/nagios-cn/sourcecode/zh_CN%203.2.3/nagios-cn-3.2.3.tar.bz2
+
+增加组加入组
+
+  /usr/sbin/groupadd nagcmd
+  /usr/sbin/usermod -G nagcmd nagios
+编译安装
+    tar jxvf nagios-cn-3.2.3.tar.bz2
+    cd nagios-cn-3.2.3
+    ./configure --with-command-group=nagcmd
+    make all
+    make install
+    make install-init
+    make install-config
+    make install-commandmode
+    make install-webconf
+    chkconfig -a nagios
+    cd ..
+
+检查配置
+  /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg

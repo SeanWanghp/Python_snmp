@@ -1,0 +1,69 @@
+C:\Users\sewang>.\venv\Scripts\activate
+(venv) C:\Users\sewang\venv>cd myproject
+(venv) C:\Users\sewang\venv\myproject>python manage.py runserver 192.168.35.135:3333
+#local html path:
+C:\Users\sewang\venv\Lib\site-packages\django\contrib\admin\templates\sean
+
+
+
+C:\Users\sewang>pip install virtualenv -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+C:\Users\sewang>pip install --upgrade pip -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+C:\Users\sewang>c:\python37\python.exe -m pip install --upgrade pip -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+C:\Users\sewang>virtualenv venv -p python
+
+C:\Users\sewang\venv>pip install django
+Looking in indexes: https://pypi.doubanio.com/simple/
+Requirement already satisfied: django in c:\python37\lib\site-packages (3.2.4)
+Requirement already satisfied: sqlparse>=0.2.2 in c:\python37\lib\site-packages (from django) (0.4.1)
+Requirement already satisfied: asgiref<4,>=3.3.2 in c:\python37\lib\site-packages (from django) (3.3.4)
+Requirement already satisfied: pytz in c:\python37\lib\site-packages (from django) (2021.1)
+Requirement already satisfied: typing-extensions in c:\python37\lib\site-packages (from asgiref<4,>=3.3.2->django) (3.7.4.3)
+
+C:\Users\sewang\venv>django-admin startproject myproject
+
+C:\Users\sewang>virtualenv --python c:\Python37\python.exe env
+created virtual environment CPython3.7.9.final.0-64 in 4760ms
+  creator CPython3Windows(dest=C:\Users\sewang\env, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=C:\Users\sewang\AppData\Local\pypa\virtualenv)
+    added seed packages: pip==21.3.1, setuptools==58.3.0, wheel==0.37.0
+  activators BashActivator,BatchActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+
+C:\Users\sewang>.\venv\Scripts\activate
+
+(venv) C:\Users\sewang>pip install Django -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+
+
+
+
+C:\Users\sewang>.\venv\Scripts\activate
+
+(venv) C:\Users\sewang\venv\myproject>python manage.py runserver
+
+
+#venv running html as following path:
+C:\Users\sewang\venv\Lib\site-packages\django\contrib\admin\templates\sean
+
+
+add static html into 'views.e7', need setting add as following.
+'libraries': {
+'staticfiles': 'django.templatetags.static',
+},
+
+
+
+pip install pygame-1.9.3-cp27-cp27m-win32.whl
+
+python setup.py install  
+
+
+进入解压的目录，执行以下命令：
+python                   
+import django
+django.get_version()
+
+
+DEBUG = True
+ALLOWED_HOSTS = [u'*']
+
+python manage.py runserver
+python manage.py runserver 0.0.0.0:8000

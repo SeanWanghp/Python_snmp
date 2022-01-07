@@ -1,0 +1,89 @@
+ host1.zyg.com Nagios-Server 192.168.5.101 Apache、Pho、Nagios、nagios-plugins
+
+ host2.zyg.com Nagios-Linux    192.168.5.102 nagios-plugin、nrpe
+
+Server 安装了Nagios软件，对监控的数据做处理，并且提供web界面查看和管理。当然也可以对本机自身的信息进行监控。
+
+Client 安装了NRPE等客户端，根据监控机的请求执行监控，然后将结果回传给监控机。
+
+
+
+配置文件的内容等：
+https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/4/en/configobject.html
+
+https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/4/en/objectdefinitions.html
+
+https://blog.csdn.net/ronmy/article/details/65662302
+文件配置：
+https://assets.nagios.com/downloads/nagioscore/docs/nagioscore/4/en/configmain.html#cfg_file
+
+https://www.cnblogs.com/mchina/archive/2013/02/20/2883404.html
+
+
+
+
+https://blog.csdn.net/specter11235/article/details/89198032
+
+
+https://www.jianshu.com/p/0dde53579aba
+
+
+https://www.bilibili.com/read/cv7134580/
+3、编写具体的收集器配置文件
+
+# cat order.collector.yml  
+
+collector_name: order  
+
+metrics:
+
+ - metric_name: order_success_day  
+
+   type: gauge
+
+   help: '每日支付成功订单数'
+
+   values: [order_success_day]
+
+   query: |
+
+     select count(order_id) as 'order_success_day' from t_orders where status=1 and createtime BETWEEN concat(curdate(),
+	 ' 00:00:00') AND concat(curdate(),' 23:59:59')
+
+
+4、配置启动脚本
+# cat > /lib/systemd/system/sql_exporter.service <<EOF
+
+[Unit]
+Description=sql_exporter
+
+[Service]
+ExecStart=/usr/local/sql_exporter/sql_exporter -config.file /usr/local/sql_exporter/config.yml -web.listen-address 0.0.0.0:9399
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+备注：sql_exporter的默认端口是9399
+
+5、启动sql_exporter
+
+# systemctl enable sql_exporter
+# systemctl restart sql_exporter
+
+
+6、将sql_exporter作为目标添加到prometheus
+
+# cat prometheus.yml
+......
+......
+   - targets: ['monitor01:9399']
+     labels:
+       app: sql_exporter
+       nodename: monitor01
+       role: sql_exporter
+
+# ./promtool check config prometheus.yml
+
+# curl -X POST http://192.168.59.250:9090/-/reload 作者：itcooking https://www.bilibili.com/read/cv7134580/ 出处：bilibili

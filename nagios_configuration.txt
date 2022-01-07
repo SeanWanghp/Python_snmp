@@ -1,0 +1,228 @@
+#New server to add OLT to monitor:
+1. set up new path for OLT running:
+/usr/local/nagios/etc/nagios.cfg	#change the path to my local path(olt)
+using for global configuration
+
+2. set up new cfg file for OLT running:
+/usr/local/nagios/etc/olt
+add olt_e7.cfg file and provision it(set up parameter value, ip, port etc.)
+
+3. set up script to command file:
+/usr/local/nagios/etc/objects
+add check_olt_cpu.py file as command in objects (set script running mode in linux)
+
+4. put script file to excute path:
+/usr/local/nagios/libexec
+add check_olt_cpu.py file into this path
+[root@nanst-nagios-06 libexec]# sudo chmod 777 check_olt_cpu.py
+
+
+[root@nanst-nagios-06 objects]# cat contacts.cfg
+
+
+5. Nagios control command:
+#nagios services start process:
+hulk_monitor start all
+hulk_monitor stop all
+
+systemctl reload-or-restart nagios.service
+systemctl stop nagios.service
+
+service nagios start
+
+#other detail config process of Nagios:
+[root@nanst-nagios-06 objects]# systemctl stop nagios.service
+[root@nanst-nagios-06 objects]# 
+[root@nanst-nagios-06 objects]# 
+[root@nanst-nagios-06 objects]# ps -ef | grep nagios
+nagios     1094      1  0 Dec21 ?        00:00:01 /usr/local/pnp4nagios/bin/npcd -d -f /usr/local/pnp4nagios/etc/npcd.cfg
+root      37904  78813  0 17:38 pts/3    00:00:00 grep --color=auto nagios
+[root@nanst-nagios-06 objects]# 
+[root@nanst-nagios-06 objects]# 
+[root@nanst-nagios-06 objects]# systemctl start nagios.service
+[root@nanst-nagios-06 objects]# ps -ef | grep nagios
+nagios     1094      1  0 Dec21 ?        00:00:01 /usr/local/pnp4nagios/bin/npcd -d -f /usr/local/pnp4nagios/etc/npcd.cfg
+nagios    38032      1  0 17:38 ?        00:00:00 /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
+nagios    38033  38032  0 17:38 ?        00:00:00 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+nagios    38034  38032  0 17:38 ?        00:00:00 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+nagios    38035  38032  0 17:38 ?        00:00:00 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+nagios    38036  38032  0 17:38 ?        00:00:00 /usr/local/nagios/bin/nagios --worker /usr/local/nagios/var/rw/nagios.qh
+nagios    38037  38032  0 17:38 ?        00:00:00 /usr/local/nagios/bin/nagios -d /usr/local/nagios/etc/nagios.cfg
+root      38063  78813  0 17:38 pts/3    00:00:00 grep --color=auto nagios
+[root@nanst-nagios-06 objects]# 
+
+
+[root@nanst-nagios-06 etc]# crontab -l
+01 23 * * * /usr/local/nagios/libexec/db_clean.sh
+45 * * * * python /usr/local/nagios/libexec/check_ip_change.py
+50 * * * * hulk_monitor stop all
+51 * * * * hulk_monitor start all
+[root@nanst-nagios-06 etc]#
+[root@nanst-nagios-06 etc]# ps -ef | grep nagios
+root        826 107688  0 16:06 pts/1    00:00:00 grep --color=auto nagios
+nagios     1094      1  0 Dec21 ?        00:00:01 /usr/local/pnp4nagios/bin/npcd -d -f /usr/local/pnp4nagios/etc/np                                                                                   cd.cfg
+[root@nanst-nagios-06 etc]# which hulk_monitor
+/bin/hulk_monitor
+[root@nanst-nagios-06 etc]# hulk_monitor start all
+Start monitor all testbed...
+
+Nagios Core 4.4.4
+Copyright (c) 2009-present Nagios Core Development Team and Community Contributors
+Copyright (c) 1999-2009 Ethan Galstad
+Last Modified: 2019-07-29
+License: GPL
+
+Website: https://www.nagios.org
+Reading configuration data...
+   Read main config file okay...
+   Read object config files okay...
+
+Running pre-flight check on configuration data...
+
+Checking objects...
+        Checked 1 services.
+        Checked 1 hosts.
+        Checked 0 host groups.
+        Checked 0 service groups.
+        Checked 1 contacts.
+        Checked 1 contact groups.
+        Checked 38 commands.
+        Checked 5 time periods.
+        Checked 0 host escalations.
+        Checked 0 service escalations.
+Checking for circular paths...
+        Checked 1 hosts
+        Checked 0 service dependencies
+        Checked 0 host dependencies
+        Checked 5 timeperiods
+Checking global event handlers...
+Checking obsessive compulsive processor commands...
+Checking misc settings...
+
+Total Warnings: 0
+Total Errors:   0
+
+Things look okay - No serious problems were detected during the pre-flight check
+fatboy
+[root@nanst-nagios-06 etc]#
+
+
+
+[root@nanst-nagios-06 objects]# cat /bin/hulk_monitor
+#!/bin/bash
+action=$1
+soakNum=$2
+path=/usr/local/nagios/etc/hulk
+if [ $action == 'stop' ];then
+        echo "Stop monitor $soakNum testbed..."
+        if [ $soakNum == "all" ];then
+                systemctl stop nagios.service
+        else
+                mv  $path/$soakNum*.cfg $path/../
+        fi
+elif [ $action == 'start' ];then
+        echo "Start monitor $soakNum testbed..."
+        if [ $soakNum != "all" ];then
+                mv $path/../$soakNum*.cfg $path
+        fi
+        /usr/local/nagios/bin/nagios -v /usr/local/nagios/etc/nagios.cfg
+        systemctl reload-or-restart nagios.service
+else
+        echo "Check monitor status..."
+        running=`systemctl status nagios.service | grep Active | grep running`
+        if [ -n "${running}"  ];then
+                echo "status: On"
+        else
+                echo "status: Off"
+        fi
+fi
+echo "fatboy"
+
+[root@nanst-nagios-06 objects]#
+[root@nanst-nagios-06 objects]# systemctl reload-or-restart nagios.service
+[root@nanst-nagios-06 objects]#
+
+
+[root@nanst-nagios-06 etc]# cd olt
+[root@nanst-nagios-06 olt]# ls
+olt_e7.cfg
+[root@nanst-nagios-06 olt]# vi olt_e7.cfg 
+define host {
+        use                     linux-server
+        host_name               olt_e7_10.245.46.218
+        alias                   e7
+        address                 10.245.46.218
+        max_check_attempts      1
+        check_interval          60
+        check_command           ont_alive
+        retry_interval          1
+        contact_groups          auto
+        check_period            24x7
+        notification_interval   60
+        notification_period     24x7
+        notifications_enabled   1
+}
+
+define service {
+        host_name               olt_e7_10.245.46.218
+        service_description     olt_e7_trail
+        check_command           check_olt_mem!8.8.8.8!10.245.46.218!22!root!root!
+        max_check_attempts      4
+        check_interval          1
+        retry_interval          2
+        contact_groups          auto
+        check_period            24x7
+        notification_interval   60
+        notification_period     24x7
+} 
+
+[root@nanst-nagios-06 objects]# vi commands.cfg :
+
+define command {
+    command_name    check_olt_mem
+    command_line    python  $USER1$/check_olt_cpu.py
+}
+
+
+[root@nanst-nagios-06 objects]# vi contacts.cfg
+
+define contact {
+    contact_name            axos_olt
+    use                     generic-contact
+    alias                   axos olt
+    email                   sean.wang@calix.com
+    }
+
+
+define contactgroup {
+    contactgroup_name       auto
+    alias                   auto
+    members                 axos_olt
+    }
+
+
+
+#define running path:
+[root@nanst-nagios-06 etc]# vi resource.cfg
+
+# Path to the plugins
+$USER1$=/usr/local/nagios/libexec
+
+
+
+
+#sendmail install and test:
+yum install -y sendmail*
+service sendmail restart
+echo "Hello World" | mail david.tang@bsmart.cn
+/usr/local/nagios/etc/objects/contacts.cfg #Nagios will send to E-mail to this address
+
+#username/password:
+http://nanst-nagios-03.calix.local/nagios/ 
+nagiosadmin/Calix123
+
+http://nanst-nagios-05.calix.local/nagios/
+nanst_nagios_05 : calix/Calix123
+
+
+
