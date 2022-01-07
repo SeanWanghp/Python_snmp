@@ -24,7 +24,6 @@ create table stat
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
 
 
-
 查看数据库内容:
 use falcon;
 show tables;

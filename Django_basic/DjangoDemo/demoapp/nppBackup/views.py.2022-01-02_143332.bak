@@ -152,7 +152,7 @@ def index_js(request):
 
 def e7(request):
     test = Test("sean", 30, "male")
-    return render(request, 'template\e7.html', {'test': test})
+    return render(request, 'e7.html', {'test': test})
 
 
 address = [
