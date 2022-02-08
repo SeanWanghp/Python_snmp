@@ -14,6 +14,9 @@ https://gitee.com/nmgwap/vueproject
 C:\vue-element-admin\src\views\login
 index.vue for username and password
 
+C:\vue-element-admin\src\api\user.js
+login path define here(Django need change the path to login)
+
 C:\vue-element-admin\src\views
 all VUE part defined files in this path
 
@@ -34,7 +37,7 @@ all js file is post and get action
 
 
 C:\vue-element-admin\src\views\dashboard\
-index.vue will point to \admin\index.vue (dashboard)
+index.vue will point to \admin\index.vue (dashboard, router\index.js)
 
 C:\vue-element-admin\src\views\dashboard\admin
 index.vue is the data for dashboard, table will change with modify value
@@ -51,7 +54,59 @@ C:\vue-element-admin\src\router
 add \ssss for 'sean' dashboad in \router\index.js, modify the name, the \ssss\index.js will auto changed
 
 
+AXIOS using: https://www.jianshu.com/p/fd7bf46d4412
+http://www.axios-js.com/docs/
+https://www.bilibili.com/video/BV18f4y1b7XV/?spm_id_from=333.788.recommend_more_video.3
+add http.js in API path
 
+
+
+
+// // https://github.com/axios/axios   // https://github.com/vuejs
+C:\vue-element-admin\src
+main.js using for import all module
+
+C:\vue-element-admin\src\utils\request.js // axios.create
+
+C:\vue-element-admin\vue.config.js // proxy configuration
+proxy: {
+      '/dev-api': {     //这里最好有一个 /
+          target: 'http://192.168.35.135:3333',  // 后台接口域名
+          ws: true,        //如果要代理 websockets，配置这个参数
+          secure: false,  // 如果是https接口，需要配置这个参数
+          changeOrigin: true,  //是否跨域
+          pathRewrite:{
+              '^/dev-api':''
+          }
+      }
+    },
+
+
+C:\vue-element-admin\src\api\users.js //create new js file for import, format as user.js
+
+VIDEO ON VUE.JS study:
+https://learning.dcloud.io/#/?vid=5
+
+https://cn.vuejs.org/v2/guide/
+https://panjiachen.gitee.io/vue-element-admin-site/zh/guide/
+https://github.com/PanJiaChen/vue-admin-template
+
+
+All VUE componet sample:
+https://element.eleme.cn/#/en-US/component/form
+
+
+# clone the project
+git clone https://github.com/PanJiaChen/vue-admin-template.git
+
+# enter the project directory
+cd vue-admin-template
+
+# install dependency
+npm install
+
+# develop
+npm run dev
 
 Django&Vue need proxy as following page:
 https://www.sohu.com/a/244645479_727010/
@@ -84,6 +139,44 @@ https://blog.csdn.net/somenzz/article/details/100815458?spm=1001.2101.3001.6650.
 ├── package.json     # 项目依赖
 └── README.md        # 项目文档
 
+
+├── mock/                      # mock server & mock data
+├── public                     # public static assets (directly copied)
+│   │── favicon.ico            # favicon
+│   │── manifest.json          # PWA config file
+│   └── index.html             # index.html template
+├── src                        # main source code
+│   ├── api                    # api service
+│   ├── assets                 # module assets like fonts, images (processed by webpack)
+│   ├── components             # global components
+│   ├── directives             # global directives
+│   ├── filters                # global filter
+│   ├── icons                  # svg icons
+│   ├── lang                   # i18n language
+│   ├── layout                 # global layout
+│   ├── pwa                    # PWA service worker related files
+│   ├── router                 # router
+│   ├── store                  # store
+│   ├── styles                 # global css
+│   ├── utils                  # global utils
+│   ├── views                  # views
+│   ├── App.vue                # main app component
+│   ├── main.ts                # app entry file
+│   ├── permission.ts          # permission authentication
+│   ├── settings.ts            # setting file
+│   └── shims.d.ts             # type definition shims
+├── tests/                     # tests
+├── .circleci/                 # automated CI configuration
+├── .browserslistrc            # browserslist config file (to support Autoprefixer)
+├── .editorconfig              # editor code format consistency config
+├── .env.xxx                   # env variable configuration
+├── .eslintrc.js               # eslint config
+├── babel.config.js            # babel config
+├── jest.config.js             # jest unit test config
+├── package.json               # package.json
+├── postcss.config.js          # postcss config
+├── tsconfig.json              # typescript config
+└── vue.config.js              # vue-cli config
 
 
 获取项目：
@@ -135,3 +228,73 @@ src/router 路由
 第六步：编写项目 该怎么写怎么写 此处省略1000W字..........
 
 第七步：项目做完以后打包 npm run build 
+
+
+
+- Login / Logout
+
+- Permission Authentication
+  - Page permission
+  - Directive permission
+  - Permission configuration page
+  - Two-step login
+
+- Multi-environment build
+  - Dev / Stage / Prod
+
+- Global Features
+  - I18n
+  - Dynamic themes
+  - Dynamic sidebar (supports multi-level routing)
+  - Dynamic breadcrumb
+  - Tags-view (supports right-click operation)
+  - Clipboard
+  - Svg icons
+  - Search
+  - Screenfull
+  - Settings
+  - Mock data / Mock server
+  - PWA support
+
+- Components
+  - Editors
+    - Rich Text Editor
+    - Markdown Editor
+    - JSON Editor
+  - Avatar Upload
+  - Back To Top
+  - CountTo
+  - Dropzone
+  - Draggable Dialog
+  - Draggable Kanban
+  - Draggable List
+  - Draggable Select
+  - ECharts
+  - Mixin
+  - SplitPane
+  - Sticky
+
+- Table
+  - Dynamic Table
+  - Draggable Table
+  - Inline Edit Table
+  - Complex Table
+
+- Excel
+  - Export Excel
+  - Upload Excel
+  - Excel Visualization
+
+- Zip
+  - Export zip
+
+- PDF
+  - Download pdf
+
+- Dashboard
+- Guide Page
+- Advanced Example Page
+- Error Log
+- Error Page
+  - 401
+  - 404
