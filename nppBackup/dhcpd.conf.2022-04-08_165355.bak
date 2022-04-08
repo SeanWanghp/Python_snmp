@@ -22,7 +22,7 @@ class "SendNAK"{
                  option broadcast-address        10.20.252.255;
                  option subnet-mask              255.255.255.0;
                  option nis-domain               "Maojun Wang";
-                 option domain-name              "maojun";
+                 option domain-name              "Calix";
                  range dynamic-bootp 10.20.252.2 10.20.252.30;
                  default-lease-time 100;
                  max-lease-time 2000;
@@ -56,7 +56,7 @@ class "SendNAK"{
 		pool {
 		#option tftp-server-name "192.168.137.200";
 		#option bootfile-name "startup.xml";
-		#option domain-name "maojun";
+		#option domain-name "calix";
 		allow all clients;
 		range dynamic-bootp 192.168.137.15 192.168.137.254;
 		}
@@ -297,8 +297,8 @@ class "SendNAK"{
                 default-lease-time 10200;
                 max-lease-time 10200;
 		option domain-name-servers 2.2.2.2;
-		option domain-name "www.maojun.com";
-		option vendor-class-identifier "maojun-CHINA";
+		option domain-name "www.calix.com";
+		option vendor-class-identifier "CALIX-CHINA";
 		option option-120 10.245.252.247;
 		option ntp-servers 1.1.1.1;
 }
@@ -312,8 +312,8 @@ class "SendNAK"{
                 default-lease-time 20040;
                 max-lease-time 20040;
                 option domain-name-servers 2.2.2.2;
-                option domain-name "www.maojun.com";
-                option vendor-class-identifier "maojun-CHINA";
+                option domain-name "www.calix.com";
+                option vendor-class-identifier "CALIX-CHINA";
                 option option-120 10.245.252.247;
                 option ntp-servers 1.1.1.1;
 }
