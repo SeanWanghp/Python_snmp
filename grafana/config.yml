@@ -1,0 +1,15 @@
+collectors:
+  enabled: cpu,cs,logical_disk,net,os,service,system,textfile
+collector:
+  service:
+    services-where: Name='windows_exporter-0.16.0-386'
+  textfile:
+    directory: 'C:\prometheus-2.28.1.windows-amd64'
+log:
+  level: debug
+scrape:
+  timeout-margin: 0.5
+telemetry:
+  addr: ":9182"
+  path: /metrics
+  max-requests: 5

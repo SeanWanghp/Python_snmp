@@ -1,0 +1,300 @@
+C:\vue-element-admin>node -v
+v16.13.0
+
+C:\vue-element-admin>npm run dev
+
+#main components:
+vue-cli-element
+Django rest framework
+
+#simple VUE project:
+https://gitee.com/nmgwap/vueproject
+
+
+C:\vue-element-admin\src\views\login
+index.vue for username and password
+
+C:\vue-element-admin\src\api\user.js
+login path define here(Django need change the path to login)
+
+C:\vue-element-admin\src\views
+all VUE part defined files in this path
+
+C:\vue-element-admin\src
+app.vue will point to router-view
+main.js will point to router
+#if (process.env.NODE_ENV === 'production') {
+#  const { mockXHR } = require('../mock')
+#  mockXHR()
+#}
+
+C:\vue-element-admin\mock\role
+router.js point to path of VUE
+
+
+C:\vue-element-admin\src\api
+all js file is post and get action
+
+
+C:\vue-element-admin\src\views\dashboard\
+index.vue will point to \admin\index.vue (dashboard, router\index.js)
+
+C:\vue-element-admin\src\views\dashboard\admin
+index.vue is the data for dashboard, table will change with modify value
+
+'template' using for table size modify
+'script' using for data value modify
+
+C:\vue-element-admin\src\views\dashboard\admin\components
+'LineChart.vue' X value modify
+
+
+C:\vue-element-admin\src\router
+'index.js' defined dashboard path and table
+add \ssss for 'sean' dashboad in \router\index.js, modify the name, the \ssss\index.js will auto changed
+
+
+AXIOS using: https://www.jianshu.com/p/fd7bf46d4412
+http://www.axios-js.com/docs/
+https://www.bilibili.com/video/BV18f4y1b7XV/?spm_id_from=333.788.recommend_more_video.3
+add http.js in API path
+
+
+
+
+// // https://github.com/axios/axios   // https://github.com/vuejs
+C:\vue-element-admin\src
+main.js using for import all module
+
+C:\vue-element-admin\src\utils\request.js // axios.create
+
+C:\vue-element-admin\vue.config.js // proxy configuration
+proxy: {
+      '/dev-api': {     //这里最好有一个 /
+          target: 'http://192.168.35.135:3333',  // 后台接口域名
+          ws: true,        //如果要代理 websockets，配置这个参数
+          secure: false,  // 如果是https接口，需要配置这个参数
+          changeOrigin: true,  //是否跨域
+          pathRewrite:{
+              '^/dev-api':''
+          }
+      }
+    },
+
+
+C:\vue-element-admin\src\api\users.js //create new js file for import, format as user.js
+
+VIDEO ON VUE.JS study:
+https://learning.dcloud.io/#/?vid=5
+
+https://cn.vuejs.org/v2/guide/
+https://panjiachen.gitee.io/vue-element-admin-site/zh/guide/
+https://github.com/PanJiaChen/vue-admin-template
+
+
+All VUE componet sample:
+https://element.eleme.cn/#/en-US/component/form
+
+
+# clone the project
+git clone https://github.com/PanJiaChen/vue-admin-template.git
+
+# enter the project directory
+cd vue-admin-template
+
+# install dependency
+npm install
+
+# develop
+npm run dev
+
+Django&Vue need proxy as following page:
+https://www.sohu.com/a/244645479_727010/
+
+Django&Vue 中HTTP GET的引用方法：
+https://blog.csdn.net/chenyzh_admin/article/details/103409577?spm=1001.2101.3001.6650.3&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-3.no_search_link&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7ECTRLIST%7Edefault-3.no_search_link&utm_relevant_index=6
+https://blog.csdn.net/somenzz/article/details/100815458?spm=1001.2101.3001.6650.8&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-8.no_search_link&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-8.no_search_link&utm_relevant_index=13
+
+
+├── /build/          # 项目构建(webpack)相关配置
+├── /config/         # 项目开发环境配置
+├── /src/            # 源码目录
+│ ├── /api/          # 请求
+│ ├── /assets/       # 组件静态资源(图片)
+│ ├── /components/   # 公共组件
+| ├── /api/          # 请求接口
+│ ├── /router/       # 路由配置
+│ ├── /vuex/         # vuex状态管理
+│ ├── /views/        # 路由组件(页面维度)
+│ ├── /config/       # 接口配置文件（请求地址）
+│ ├── App.vue        # 组件入口
+│ └── main.js        # 程序入口
+├── /static/         # 非组件静态资源
+├── .babelrc         # ES6语法编译配置
+├── .editorconfig    # 定义代码格式
+├── .eslintignore    # ES6规范忽略文件
+├── .eslintrc.js     # ES6语法规范配置
+├── .gitignore       # git忽略文件
+├── index.html       # 页面入口
+├── package.json     # 项目依赖
+└── README.md        # 项目文档
+
+
+├── mock/                      # mock server & mock data
+├── public                     # public static assets (directly copied)
+│   │── favicon.ico            # favicon
+│   │── manifest.json          # PWA config file
+│   └── index.html             # index.html template
+├── src                        # main source code
+│   ├── api                    # api service
+│   ├── assets                 # module assets like fonts, images (processed by webpack)
+│   ├── components             # global components
+│   ├── directives             # global directives
+│   ├── filters                # global filter
+│   ├── icons                  # svg icons
+│   ├── lang                   # i18n language
+│   ├── layout                 # global layout
+│   ├── pwa                    # PWA service worker related files
+│   ├── router                 # router
+│   ├── store                  # store
+│   ├── styles                 # global css
+│   ├── utils                  # global utils
+│   ├── views                  # views
+│   ├── App.vue                # main app component
+│   ├── main.ts                # app entry file
+│   ├── permission.ts          # permission authentication
+│   ├── settings.ts            # setting file
+│   └── shims.d.ts             # type definition shims
+├── tests/                     # tests
+├── .circleci/                 # automated CI configuration
+├── .browserslistrc            # browserslist config file (to support Autoprefixer)
+├── .editorconfig              # editor code format consistency config
+├── .env.xxx                   # env variable configuration
+├── .eslintrc.js               # eslint config
+├── babel.config.js            # babel config
+├── jest.config.js             # jest unit test config
+├── package.json               # package.json
+├── postcss.config.js          # postcss config
+├── tsconfig.json              # typescript config
+└── vue.config.js              # vue-cli config
+
+
+获取项目：
+git clone https://github.com/Angelasp/vue-element-admin.git
+
+安装依赖
+npm install
+
+本地开发 启动项目
+npm run dev
+发布
+
+构建测试环境
+npm run build:stage
+
+构建生产环境
+npm run build:prod
+
+
+预览发布环境效果
+npm run preview
+
+预览发布环境效果 + 静态资源分析
+npm run preview -- --report
+
+代码格式检查
+npm run lint
+
+代码格式检查并自动修复
+npm run lint -- --fix
+
+src/components 目录下有多个页面，页面包括（echart、Excel、图片上传等）
+src/api 请求接口访问
+src/assets 静态资源文件
+src/mock  模拟数据
+src/router 路由
+
+
+第一步：安装Node 检测Node是否安装成功 node -v
+
+第二步：安装vue-cli     命令:npm install vue-cli -g
+
+第三步：搭建项目命令 vue init webpack '你的项目名称'  一路回车 遇到eslint选择no
+
+第四步：安装依赖包 进去你所创建的项目 输入命令npm install 这样就是安装完成了
+
+第五步：启动项目 npm run dev 
+
+第六步：编写项目 该怎么写怎么写 此处省略1000W字..........
+
+第七步：项目做完以后打包 npm run build 
+
+
+
+- Login / Logout
+
+- Permission Authentication
+  - Page permission
+  - Directive permission
+  - Permission configuration page
+  - Two-step login
+
+- Multi-environment build
+  - Dev / Stage / Prod
+
+- Global Features
+  - I18n
+  - Dynamic themes
+  - Dynamic sidebar (supports multi-level routing)
+  - Dynamic breadcrumb
+  - Tags-view (supports right-click operation)
+  - Clipboard
+  - Svg icons
+  - Search
+  - Screenfull
+  - Settings
+  - Mock data / Mock server
+  - PWA support
+
+- Components
+  - Editors
+    - Rich Text Editor
+    - Markdown Editor
+    - JSON Editor
+  - Avatar Upload
+  - Back To Top
+  - CountTo
+  - Dropzone
+  - Draggable Dialog
+  - Draggable Kanban
+  - Draggable List
+  - Draggable Select
+  - ECharts
+  - Mixin
+  - SplitPane
+  - Sticky
+
+- Table
+  - Dynamic Table
+  - Draggable Table
+  - Inline Edit Table
+  - Complex Table
+
+- Excel
+  - Export Excel
+  - Upload Excel
+  - Excel Visualization
+
+- Zip
+  - Export zip
+
+- PDF
+  - Download pdf
+
+- Dashboard
+- Guide Page
+- Advanced Example Page
+- Error Log
+- Error Page
+  - 401
+  - 404

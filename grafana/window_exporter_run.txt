@@ -1,0 +1,40 @@
+windows_exporter-0.16.0-386.exe --config.file=config.yml
+
+Windows_exporter releases:
+https://github.com/prometheus-community/windows_exporter/releases
+
+How to modify the error:
+https://github.com/prometheus-community/windows_exporter/issues/740
+
+
+https://www.cnblogs.com/zgqbky/p/13672343.html
+https://www.cnblogs.com/bixiaoyu/p/7764933.html
+https://glory.blog.csdn.net/article/details/108275219?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-18.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-18.control
+
+
+ONT grafana system:(xiaoting Lai)
+
+
+https://nagios-plugins.org/doc/guidelines.html#AEN200
+
+
+
+
+
+netstat -aon|findstr "9182"
+
+tasklist|findstr "37296"
+
+
+taskkill /pid 2152 /pid 1284
+
+taskkill /im notepad.exe /im iexplorer.exe
+
+taskkill /im *.exe
+
+
+taskkill /t /im notepad.exe
+taskkill /t /pid 2152
+
+taskkill /f /im notepad.exe
+taskkill /f /pid 2152

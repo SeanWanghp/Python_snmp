@@ -1,0 +1,31 @@
+Grafana(server), prometheus(server), alertmanager(server), python&prometheus_client(exporter with prometheus_client lib)
+
+1. Grafana server installation by https://grafana.com/grafana/download.
+	windows:
+	a. run exe in windows
+	b. http://IP:3000
+
+	Linux:
+	a. systemctl start grafana-server
+	b. systemctl status grafana-server
+	c. systemctl enable grafana-server
+
+
+2. Prometheus&alertmanager server installation by https://prometheus.io/download/.
+	windows:
+	a. run exe in windows, then check http://localhost:9090/targets
+	a1. prometheus.yml for configuration, add more units metrics for monitor.
+	a2. add alarm rule file, like fist_rules.yml.
+	a3. detail configuration reference: https://calix.atlassian.net/wiki/spaces/~785413038/pages/3188752611/Grafana+prometheus+exporter
+
+	b. run exe in windows, then check http://192.168.35.135:9093/#/status
+	b1. alertmanager.yml for configutation, email address, alarm rule set up.
+	b2. detail configuration reference: https://www.cnblogs.com/longcnblogs/p/9620733.html
+
+
+
+3. python&prometheus_client, code with prometheus_client lib.
+	a. run python code, then check http://127.0.0.1:5000/metrics
+
+
+Another configuration reference: https://calix.atlassian.net/wiki/spaces/~785413038/pages/3188752611/Grafana+prometheus+exporter
