@@ -1,0 +1,29 @@
+从这个路径执行 mysql:
+C:\Program Files\MySQL\MySQL Server 5.7\bin
+
+
+
+数据库命令行：
+create database falcon；
+show databases;
+use falcon;
+
+
+#表格不能带引号，否则会报错：
+create table stat 
+(
+ id int(11) unsigned not null auto_increment,
+ host varchar(256) DEFAULT NULL,
+ mem_free int(11) DEFAULT NULL,
+ mem_usage int(11) DEFAULT NULL,
+ mem_total int(11) DEFAULT NULL,
+ load_avg varchar(128) DEFAULT NULL,
+ time bigint(11) DEFAULT NULL,
+ PRIMARY KEY (id),
+ KEY host (host(255))
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+查看数据库内容:
+use falcon;
+show tables;
+desc stat;
