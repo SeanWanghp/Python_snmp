@@ -1,0 +1,17 @@
+nohup: ignoring input
+/home/calix/.local/lib/python3.6/site-packages/pymysql/_auth.py:8: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography and will be removed in a future release.
+  from cryptography.hazmat.backends import default_backend
+2023-03-22 11:08:17.669377 fetch OLT data begin
+error: 10.245.48.30无法连接 (10.245.48.30)
+error: 10.245.48.29无法连接 (10.245.48.29)
+2023-03-22 11:19:20.776509 fetch Individual data begin
+error: 10.245.38.35无法连接 (10.245.38.35)
+2023-03-22 11:23:45.597869 fetch VM data begin
+2023-03-22 11:24:16.396252 script pause for 21600 seconds, please waiting.......................
+
+2023-03-22 17:24:16.496843 fetch OLT data begin
+error: 10.245.48.29无法连接 (10.245.48.29)
+2023-03-22 17:34:58.466957 fetch Individual data begin
+2023-03-22 17:39:33.386838 fetch VM data begin
+2023-03-22 17:40:04.473351 script pause for 21600 seconds, please waiting.......................
+
